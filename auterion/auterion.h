@@ -50,7 +50,6 @@ extern "C" {
 
 
 // base include
-#include "../common/common.h"
 #include "../development/development.h"
 
 #undef MAVLINK_THIS_XML_IDX
