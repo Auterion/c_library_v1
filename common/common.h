@@ -2207,6 +2207,18 @@ typedef enum HIGHRES_IMU_UPDATED_FLAGS
 } HIGHRES_IMU_UPDATED_FLAGS;
 #endif
 
+/** @brief  */
+#ifndef HAVE_ENUM_CAN_FILTER_OP
+#define HAVE_ENUM_CAN_FILTER_OP
+typedef enum CAN_FILTER_OP
+{
+   CAN_FILTER_REPLACE=0, /*  | */
+   CAN_FILTER_ADD=1, /*  | */
+   CAN_FILTER_REMOVE=2, /*  | */
+   CAN_FILTER_OP_ENUM_END=3, /*  | */
+} CAN_FILTER_OP;
+#endif
+
 // MAVLINK VERSION
 
 #ifndef MAVLINK_VERSION
