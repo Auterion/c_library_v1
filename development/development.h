@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH -1512587351560082349
+#define MAVLINK_DEVELOPMENT_XML_HASH -8179595354074486440
 
 #ifdef __cplusplus
 extern "C" {
@@ -238,6 +238,56 @@ typedef enum MAV_BATTERY_STATUS_FLAGS
    MAV_BATTERY_STATUS_FLAGS_EXTENDED=4294967295, /* Reserved (not used). If set, this will indicate that an additional status field exists for higher status values. | */
    MAV_BATTERY_STATUS_FLAGS_ENUM_END=4294967296, /*  | */
 } MAV_BATTERY_STATUS_FLAGS;
+#endif
+
+/** @brief List of the currently active control entity. */
+#ifndef HAVE_ENUM_CURRENT_CONTROL_ENTITY
+#define HAVE_ENUM_CURRENT_CONTROL_ENTITY
+typedef enum CURRENT_CONTROL_ENTITY
+{
+   CURRENT_CONTROL_ENTITY_NONE=0, /* Setting if no entity has control ownership. | */
+   CURRENT_CONTROL_ENTITY_OWNER=1, /* Setting if the receiving GCS is the control entity. | */
+   CURRENT_CONTROL_ENTITY_OTHER=2, /* Setting if a GCS other than the receiving GCS is the control entity. | */
+   CURRENT_CONTROL_ENTITY_ENUM_END=3, /*  | */
+} CURRENT_CONTROL_ENTITY;
+#endif
+
+/** @brief Selection of control target for changing ownership. */
+#ifndef HAVE_ENUM_CONTROL_TARGET_REQUEST
+#define HAVE_ENUM_CONTROL_TARGET_REQUEST
+typedef enum CONTROL_TARGET_REQUEST
+{
+   CONTROL_TARGET_ALL=0, /* Request change control ownership of both flight control and payload control. | */
+   CONTROL_TARGET_FLIGHT=1, /* Request change control ownership of the flight control. | */
+   CONTROL_TARGET_PAYLOAD=2, /* Request change control ownership of the payload control. | */
+   CONTROL_TARGET_REQUEST_ENUM_END=3, /*  | */
+} CONTROL_TARGET_REQUEST;
+#endif
+
+/** @brief Error code for the control request response. */
+#ifndef HAVE_ENUM_CONTROL_REQUEST_ERROR_CODE
+#define HAVE_ENUM_CONTROL_REQUEST_ERROR_CODE
+typedef enum CONTROL_REQUEST_ERROR_CODE
+{
+   CONTROL_REQUEST_PROCESSED=0, /* Code indicating successful processing of the request. | */
+   CONTROL_REQUEST_DENIED=1, /* Error code indicating that the control request has been denied by the target system. | */
+   CONTROL_REQUEST_HANDOFF_TIMEOUT=2, /* Error Code indicating timeout on the handoff request. | */
+   CONTROL_REQUEST_DENIED_CONCURRENT=3, /* Error Code indicating another control request is in process. | */
+   CONTROL_REQUEST_NO_CONTROL_AUTHORITY=4, /* Error Code indicating no enough authority to take control ownership. | */
+   CONTROL_REQUEST_NO_PRIORITY_AUTHORITY=5, /* Error Code indicating no enough priority authority control ownership. | */
+   CONTROL_REQUEST_ERROR_CODE_ENUM_END=6, /*  | */
+} CONTROL_REQUEST_ERROR_CODE;
+#endif
+
+/** @brief Decision of the GCS to a handoff request. */
+#ifndef HAVE_ENUM_HANDOFF_DECISION
+#define HAVE_ENUM_HANDOFF_DECISION
+typedef enum HANDOFF_DECISION
+{
+   HANDOFF_DECISION_ACCEPT=0, /* Decision to accept the handoff and release control ownership. | */
+   HANDOFF_DECISION_DENIED=1, /* Decision to deny the handoff request and keep control ownership. | */
+   HANDOFF_DECISION_ENUM_END=2, /*  | */
+} HANDOFF_DECISION;
 #endif
 
 // MAVLINK VERSION
