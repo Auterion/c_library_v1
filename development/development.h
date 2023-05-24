@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH 4016785441235288796
+#define MAVLINK_DEVELOPMENT_XML_HASH 6459010425073610021
 
 #ifdef __cplusplus
 extern "C" {
@@ -166,6 +166,23 @@ typedef enum MAV_STANDARD_MODE
          | */
    MAV_STANDARD_MODE_ENUM_END=10, /*  | */
 } MAV_STANDARD_MODE;
+#endif
+
+/** @brief Mode properties.
+       */
+#ifndef HAVE_ENUM_MAV_MODE_PROPERTY
+#define HAVE_ENUM_MAV_MODE_PROPERTY
+typedef enum MAV_MODE_PROPERTY
+{
+   MAV_MODE_PROPERTY_ADVANCED=1, /* If set, this mode is an advanced mode.
+          For example a rate-controlled manual mode might be advanced, whereas a position-controlled manual mode is not.
+          A GCS can optionally use this flag to configure the UI for its intended users.
+         | */
+   MAV_MODE_PROPERTY_NOT_USER_SELECTABLE=2, /* If set, this mode should not be added to the list of selectable modes.
+          The mode might still be selected by the FC directly (for example as part of a failsafe).
+         | */
+   MAV_MODE_PROPERTY_ENUM_END=3, /*  | */
+} MAV_MODE_PROPERTY;
 #endif
 
 /** @brief Battery status flags for fault, health and state indication. */
