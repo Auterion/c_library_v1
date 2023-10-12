@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH -6538270671228034383
+#define MAVLINK_DEVELOPMENT_XML_HASH 2805303058894197831
 
 #ifdef __cplusplus
 extern "C" {
@@ -196,12 +196,12 @@ typedef enum MAV_BATTERY_STATUS_FLAGS
           Not ready to use (MAV_BATTERY_STATUS_FLAGS_NOT_READY_TO_USE would be set).
          | */
    MAV_BATTERY_STATUS_FLAGS_REQUIRES_SERVICE=32, /* 
-          Battery requires service (not safe to fly). 
+          Battery requires service (not safe to fly).
           This is set at vendor discretion.
           It is likely to be set for most faults, and may also be set according to a maintenance schedule (such as age, or number of recharge cycles, etc.).
          | */
    MAV_BATTERY_STATUS_FLAGS_BAD_BATTERY=64, /* 
-          Battery is faulty and cannot be repaired (not safe to fly). 
+          Battery is faulty and cannot be repaired (not safe to fly).
           This is set at vendor discretion.
           The battery should be disposed of safely.
          | */
