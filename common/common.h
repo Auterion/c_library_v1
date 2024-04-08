@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 1773391976429034120
+#define MAVLINK_COMMON_XML_HASH 382862913400282509
 
 #ifdef __cplusplus
 extern "C" {
@@ -175,24 +175,20 @@ typedef enum MAV_SYS_STATUS_SENSOR_EXTENDED
 #define HAVE_ENUM_MAV_FRAME
 typedef enum MAV_FRAME
 {
-   MAV_FRAME_GLOBAL=0, /* Global (WGS84) coordinate frame + MSL altitude. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL). | */
+   MAV_FRAME_GLOBAL=0, /* Global (WGS84) coordinate frame + altitude relative to mean sea level (MSL). | */
    MAV_FRAME_LOCAL_NED=1, /* NED local tangent frame (x: North, y: East, z: Down) with origin fixed relative to earth. | */
    MAV_FRAME_MISSION=2, /* NOT a coordinate frame, indicates a mission command. | */
    MAV_FRAME_GLOBAL_RELATIVE_ALT=3, /* 
           Global (WGS84) coordinate frame + altitude relative to the home position.
-          First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home position.
          | */
    MAV_FRAME_LOCAL_ENU=4, /* ENU local tangent frame (x: East, y: North, z: Up) with origin fixed relative to earth. | */
-   MAV_FRAME_GLOBAL_INT=5, /* Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude over mean sea level (MSL). | */
-   MAV_FRAME_GLOBAL_RELATIVE_ALT_INT=6, /* 
-          Global (WGS84) coordinate frame (scaled) + altitude relative to the home position.
-          First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude with 0 being at the altitude of the home position.
-         | */
+   MAV_FRAME_GLOBAL_INT=5, /* Global (WGS84) coordinate frame (scaled) + altitude relative to mean sea level (MSL). | */
+   MAV_FRAME_GLOBAL_RELATIVE_ALT_INT=6, /* Global (WGS84) coordinate frame (scaled) + altitude relative to the home position.  | */
    MAV_FRAME_LOCAL_OFFSET_NED=7, /* NED local tangent frame (x: North, y: East, z: Down) with origin that travels with the vehicle. | */
    MAV_FRAME_BODY_NED=8, /* Same as MAV_FRAME_LOCAL_NED when used to represent position values. Same as MAV_FRAME_BODY_FRD when used with velocity/acceleration values. | */
    MAV_FRAME_BODY_OFFSET_NED=9, /* This is the same as MAV_FRAME_BODY_FRD. | */
-   MAV_FRAME_GLOBAL_TERRAIN_ALT=10, /* Global (WGS84) coordinate frame with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | */
-   MAV_FRAME_GLOBAL_TERRAIN_ALT_INT=11, /* Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | */
+   MAV_FRAME_GLOBAL_TERRAIN_ALT=10, /* Global (WGS84) coordinate frame with AGL altitude (altitude at ground level). | */
+   MAV_FRAME_GLOBAL_TERRAIN_ALT_INT=11, /* Global (WGS84) coordinate frame (scaled) with AGL altitude (altitude at ground level). | */
    MAV_FRAME_BODY_FRD=12, /* FRD local frame aligned to the vehicle's attitude (x: Forward, y: Right, z: Down) with an origin that travels with vehicle. | */
    MAV_FRAME_RESERVED_13=13, /* MAV_FRAME_BODY_FLU - Body fixed frame of reference, Z-up (x: Forward, y: Left, z: Up). | */
    MAV_FRAME_RESERVED_14=14, /* MAV_FRAME_MOCAP_NED - Odometry local coordinate frame of data given by a motion capture system, Z-down (x: North, y: East, z: Down). | */
@@ -262,6 +258,20 @@ typedef enum FENCE_MITIGATE
    FENCE_MITIGATE_VEL_LIMIT=2, /* Velocity limiting active to prevent breach | */
    FENCE_MITIGATE_ENUM_END=3, /*  | */
 } FENCE_MITIGATE;
+#endif
+
+/** @brief  */
+#ifndef HAVE_ENUM_FENCE_TYPE
+#define HAVE_ENUM_FENCE_TYPE
+typedef enum FENCE_TYPE
+{
+   FENCE_TYPE_ALL=0, /* All fence types | */
+   FENCE_TYPE_ALT_MAX=1, /* Maximum altitude fence | */
+   FENCE_TYPE_CIRCLE=2, /* Circle fence | */
+   FENCE_TYPE_POLYGON=4, /* Polygon fence | */
+   FENCE_TYPE_ALT_MIN=8, /* Minimum altitude fence | */
+   FENCE_TYPE_ENUM_END=9, /*  | */
+} FENCE_TYPE;
 #endif
 
 /** @brief Enumeration of possible mount operation modes. This message is used by obsolete/deprecated gimbal messages. */
@@ -1463,6 +1473,19 @@ typedef enum SET_FOCUS_TYPE
 } SET_FOCUS_TYPE;
 #endif
 
+/** @brief Camera sources for MAV_CMD_SET_CAMERA_SOURCE */
+#ifndef HAVE_ENUM_CAMERA_SOURCE
+#define HAVE_ENUM_CAMERA_SOURCE
+typedef enum CAMERA_SOURCE
+{
+   CAMERA_SOURCE_DEFAULT=0, /* Default camera source. | */
+   CAMERA_SOURCE_RGB=1, /* RGB camera source. | */
+   CAMERA_SOURCE_IR=2, /* IR camera source. | */
+   CAMERA_SOURCE_NDVI=3, /* NDVI camera source. | */
+   CAMERA_SOURCE_ENUM_END=4, /*  | */
+} CAMERA_SOURCE;
+#endif
+
 /** @brief Result from PARAM_EXT_SET message (or a PARAM_SET within a transaction). */
 #ifndef HAVE_ENUM_PARAM_ACK
 #define HAVE_ENUM_PARAM_ACK
@@ -2323,6 +2346,19 @@ typedef enum MISSION_STATE
    MISSION_STATE_COMPLETE=5, /* Mission has executed all mission items. | */
    MISSION_STATE_ENUM_END=6, /*  | */
 } MISSION_STATE;
+#endif
+
+/** @brief 
+	Possible safety switch states.
+       */
+#ifndef HAVE_ENUM_SAFETY_SWITCH_STATE
+#define HAVE_ENUM_SAFETY_SWITCH_STATE
+typedef enum SAFETY_SWITCH_STATE
+{
+   SAFETY_SWITCH_STATE_SAFE=0, /* Safety switch is engaged and vehicle should be safe to approach. | */
+   SAFETY_SWITCH_STATE_DANGEROUS=1, /* Safety switch is NOT engaged and motors, propellers and other actuators should be considered active. | */
+   SAFETY_SWITCH_STATE_ENUM_END=2, /*  | */
+} SAFETY_SWITCH_STATE;
 #endif
 
 // MAVLINK VERSION
