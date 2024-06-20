@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 382862913400282509
+#define MAVLINK_COMMON_XML_HASH 1646796309446702931
 
 #ifdef __cplusplus
 extern "C" {
@@ -2359,6 +2359,30 @@ typedef enum SAFETY_SWITCH_STATE
    SAFETY_SWITCH_STATE_DANGEROUS=1, /* Safety switch is NOT engaged and motors, propellers and other actuators should be considered active. | */
    SAFETY_SWITCH_STATE_ENUM_END=2, /*  | */
 } SAFETY_SWITCH_STATE;
+#endif
+
+/** @brief Modes of illuminator */
+#ifndef HAVE_ENUM_ILLUMINATOR_MODE
+#define HAVE_ENUM_ILLUMINATOR_MODE
+typedef enum ILLUMINATOR_MODE
+{
+   ILLUMINATOR_MODE_UNKNOWN=0, /* Illuminator mode is not specified/unknown | */
+   ILLUMINATOR_MODE_INTERNAL_CONTROL=1, /* Illuminator behavior is controlled by MAV_CMD_DO_ILLUMINATOR_CONFIGURE settings | */
+   ILLUMINATOR_MODE_EXTERNAL_SYNC=2, /* Illuminator behavior is controlled by external factors: e.g. an external hardware signal | */
+   ILLUMINATOR_MODE_ENUM_END=3, /*  | */
+} ILLUMINATOR_MODE;
+#endif
+
+/** @brief Illuminator module error flags (bitmap, 0 means no error) */
+#ifndef HAVE_ENUM_ILLUMINATOR_ERROR_FLAGS
+#define HAVE_ENUM_ILLUMINATOR_ERROR_FLAGS
+typedef enum ILLUMINATOR_ERROR_FLAGS
+{
+   ILLUMINATOR_ERROR_FLAGS_THERMAL_THROTTLING=1, /* Illuminator thermal throttling error. | */
+   ILLUMINATOR_ERROR_FLAGS_OVER_TEMPERATURE_SHUTDOWN=2, /* Illuminator over temperature shutdown error. | */
+   ILLUMINATOR_ERROR_FLAGS_THERMISTOR_FAILURE=4, /* Illuminator thermistor failure. | */
+   ILLUMINATOR_ERROR_FLAGS_ENUM_END=5, /*  | */
+} ILLUMINATOR_ERROR_FLAGS;
 #endif
 
 // MAVLINK VERSION

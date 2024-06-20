@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_RAS_A.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_RAS_A_XML_HASH -4572466177346049462
+#define MAVLINK_RAS_A_XML_HASH 4925692323888098370
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,6 +82,7 @@ typedef enum MAV_TYPE
    MAV_TYPE_GPS=41, /* GPS | */
    MAV_TYPE_WINCH=42, /* Winch | */
    MAV_TYPE_GENERIC_MULTIROTOR=43, /* Generic multirotor that does not fit into a specific type or whose type is unknown | */
+   MAV_TYPE_ILLUMINATOR=44, /* Illuminator. An illuminator is a light source that is used for lighting up dark areas external to the sytstem: e.g. a torch or searchlight (as opposed to a light source for illuminating the system itself, e.g. an indicator light). | */
    MAV_TYPE_GENERIC_COMPONENT=50, /* Generic component which implements the generic component attribute discovery and control interface through mavlink parameter exchange. | */
    MAV_TYPE_ENUM_END=51, /*  | */
 } MAV_TYPE;
