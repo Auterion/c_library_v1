@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH -4476299558272597897
+#define MAVLINK_AUTERION_XML_HASH 1288105290143634996
 
 #ifdef __cplusplus
 extern "C" {
@@ -597,6 +597,29 @@ typedef enum HANDOFF_DECISION
 } HANDOFF_DECISION;
 #endif
 
+/** @brief Possible transport layers to set and get parameters via mavlink during a parameter transaction. */
+#ifndef HAVE_ENUM_PARAM_TRANSACTION_TRANSPORT
+#define HAVE_ENUM_PARAM_TRANSACTION_TRANSPORT
+typedef enum PARAM_TRANSACTION_TRANSPORT
+{
+   PARAM_TRANSACTION_TRANSPORT_PARAM=0, /* Transaction over param transport. | */
+   PARAM_TRANSACTION_TRANSPORT_PARAM_EXT=1, /* Transaction over param_ext transport. | */
+   PARAM_TRANSACTION_TRANSPORT_ENUM_END=2, /*  | */
+} PARAM_TRANSACTION_TRANSPORT;
+#endif
+
+/** @brief Possible parameter transaction actions. */
+#ifndef HAVE_ENUM_PARAM_TRANSACTION_ACTION
+#define HAVE_ENUM_PARAM_TRANSACTION_ACTION
+typedef enum PARAM_TRANSACTION_ACTION
+{
+   PARAM_TRANSACTION_ACTION_START=0, /* Commit the current parameter transaction. | */
+   PARAM_TRANSACTION_ACTION_COMMIT=1, /* Commit the current parameter transaction. | */
+   PARAM_TRANSACTION_ACTION_CANCEL=2, /* Cancel the current parameter transaction. | */
+   PARAM_TRANSACTION_ACTION_ENUM_END=3, /*  | */
+} PARAM_TRANSACTION_ACTION;
+#endif
+
 // MAVLINK VERSION
 
 #ifndef MAVLINK_VERSION
@@ -609,7 +632,7 @@ typedef enum HANDOFF_DECISION
 #endif
 
 // MESSAGE DEFINITIONS
-
+#include "./mavlink_msg_param_ack_transaction.h"
 
 // base include
 #include "../ras_a/ras_a.h"
