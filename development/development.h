@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH 1421922337446063474
+#define MAVLINK_DEVELOPMENT_XML_HASH 1338918910136670865
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,21 +33,6 @@ extern "C" {
 // ENUM DEFINITIONS
 
 
-/** @brief WiFi wireless security protocols. */
-#ifndef HAVE_ENUM_WIFI_NETWORK_SECURITY
-#define HAVE_ENUM_WIFI_NETWORK_SECURITY
-typedef enum WIFI_NETWORK_SECURITY
-{
-   WIFI_NETWORK_SECURITY_UNDEFINED=0, /* Undefined or unknown security protocol. | */
-   WIFI_NETWORK_SECURITY_OPEN=1, /* Open network, no security. | */
-   WIFI_NETWORK_SECURITY_WEP=2, /* WEP. | */
-   WIFI_NETWORK_SECURITY_WPA1=3, /* WPA1. | */
-   WIFI_NETWORK_SECURITY_WPA2=4, /* WPA2. | */
-   WIFI_NETWORK_SECURITY_WPA3=5, /* WPA3. | */
-   WIFI_NETWORK_SECURITY_ENUM_END=6, /*  | */
-} WIFI_NETWORK_SECURITY;
-#endif
-
 /** @brief Airspeed sensor flags */
 #ifndef HAVE_ENUM_AIRSPEED_SENSOR_FLAGS
 #define HAVE_ENUM_AIRSPEED_SENSOR_FLAGS
@@ -57,94 +42,6 @@ typedef enum AIRSPEED_SENSOR_FLAGS
    AIRSPEED_SENSOR_USING=1, /* True if the data from this sensor is being actively used by the flight controller for guidance, navigation or control. | */
    AIRSPEED_SENSOR_FLAGS_ENUM_END=2, /*  | */
 } AIRSPEED_SENSOR_FLAGS;
-#endif
-
-/** @brief Standard modes with a well understood meaning across flight stacks and vehicle types.
-        For example, most flight stack have the concept of a "return" or "RTL" mode that takes a vehicle to safety, even though the precise mechanics of this mode may differ.
-        Modes may be set using MAV_CMD_DO_SET_STANDARD_MODE.
-       */
-#ifndef HAVE_ENUM_MAV_STANDARD_MODE
-#define HAVE_ENUM_MAV_STANDARD_MODE
-typedef enum MAV_STANDARD_MODE
-{
-   MAV_STANDARD_MODE_NON_STANDARD=0, /* Non standard mode.
-          This may be used when reporting the mode if the current flight mode is not a standard mode.
-         | */
-   MAV_STANDARD_MODE_POSITION_HOLD=1, /* Position mode (manual).
-          Position-controlled and stabilized manual mode.
-          When sticks are released vehicles return to their level-flight orientation and hold both position and altitude against wind and external forces.
-          This mode can only be set by vehicles that can hold a fixed position.
-          Multicopter (MC) vehicles actively brake and hold both position and altitude against wind and external forces.
-          Hybrid MC/FW ("VTOL") vehicles first transition to multicopter mode (if needed) but otherwise behave in the same way as MC vehicles.
-          Fixed-wing (FW) vehicles must not support this mode.
-          Other vehicle types must not support this mode (this may be revisited through the PR process).
-         | */
-   MAV_STANDARD_MODE_ORBIT=2, /* Orbit (manual).
-          Position-controlled and stabilized manual mode.
-          The vehicle circles around a fixed setpoint in the horizontal plane at a particular radius, altitude, and direction.
-          Flight stacks may further allow manual control over the setpoint position, radius, direction, speed, and/or altitude of the circle, but this is not mandated.
-          Flight stacks may support the [MAV_CMD_DO_ORBIT](https://mavlink.io/en/messages/common.html#MAV_CMD_DO_ORBIT) for changing the orbit parameters.
-          MC and FW vehicles may support this mode.
-          Hybrid MC/FW ("VTOL") vehicles may support this mode in MC/FW or both modes; if the mode is not supported by the current configuration the vehicle should transition to the supported configuration.
-          Other vehicle types must not support this mode (this may be revisited through the PR process).
-         | */
-   MAV_STANDARD_MODE_CRUISE=3, /* Cruise mode (manual).
-          Position-controlled and stabilized manual mode.
-          When sticks are released vehicles return to their level-flight orientation and hold their original track against wind and external forces.
-          Fixed-wing (FW) vehicles level orientation and maintain current track and altitude against wind and external forces.
-          Hybrid MC/FW ("VTOL") vehicles first transition to FW mode (if needed) but otherwise behave in the same way as MC vehicles.
-          Multicopter (MC) vehicles must not support this mode.
-          Other vehicle types must not support this mode (this may be revisited through the PR process).
-         | */
-   MAV_STANDARD_MODE_ALTITUDE_HOLD=4, /* Altitude hold (manual).
-          Altitude-controlled and stabilized manual mode.
-          When sticks are released vehicles return to their level-flight orientation and hold their altitude.
-          MC vehicles continue with existing momentum and may move with wind (or other external forces).
-          FW vehicles continue with current heading, but may be moved off-track by wind.
-          Hybrid MC/FW ("VTOL") vehicles behave according to their current configuration/mode (FW or MC).
-          Other vehicle types must not support this mode (this may be revisited through the PR process).
-         | */
-   MAV_STANDARD_MODE_RETURN_HOME=5, /* Return home mode (auto).
-          Automatic mode that returns vehicle to home via a safe flight path.
-          It may also automatically land the vehicle (i.e. RTL).
-          The precise flight path and landing behaviour depend on vehicle configuration and type.
-         | */
-   MAV_STANDARD_MODE_SAFE_RECOVERY=6, /* Safe recovery mode (auto).
-          Automatic mode that takes vehicle to a predefined safe location via a safe flight path (rally point or mission defined landing) .
-          It may also automatically land the vehicle.
-          The precise return location, flight path, and landing behaviour depend on vehicle configuration and type.
-         | */
-   MAV_STANDARD_MODE_MISSION=7, /* Mission mode (automatic).
-          Automatic mode that executes MAVLink missions.
-          Missions are executed from the current waypoint as soon as the mode is enabled.
-         | */
-   MAV_STANDARD_MODE_LAND=8, /* Land mode (auto).
-          Automatic mode that lands the vehicle at the current location.
-          The precise landing behaviour depends on vehicle configuration and type.
-         | */
-   MAV_STANDARD_MODE_TAKEOFF=9, /* Takeoff mode (auto).
-          Automatic takeoff mode.
-          The precise takeoff behaviour depends on vehicle configuration and type.
-         | */
-   MAV_STANDARD_MODE_ENUM_END=10, /*  | */
-} MAV_STANDARD_MODE;
-#endif
-
-/** @brief Mode properties.
-       */
-#ifndef HAVE_ENUM_MAV_MODE_PROPERTY
-#define HAVE_ENUM_MAV_MODE_PROPERTY
-typedef enum MAV_MODE_PROPERTY
-{
-   MAV_MODE_PROPERTY_ADVANCED=1, /* If set, this mode is an advanced mode.
-          For example a rate-controlled manual mode might be advanced, whereas a position-controlled manual mode is not.
-          A GCS can optionally use this flag to configure the UI for its intended users.
-         | */
-   MAV_MODE_PROPERTY_NOT_USER_SELECTABLE=2, /* If set, this mode should not be added to the list of selectable modes.
-          The mode might still be selected by the FC directly (for example as part of a failsafe).
-         | */
-   MAV_MODE_PROPERTY_ENUM_END=3, /*  | */
-} MAV_MODE_PROPERTY;
 #endif
 
 /** @brief Battery status flags for fault, health and state indication. */
@@ -219,6 +116,17 @@ typedef enum MAV_BATTERY_STATUS_FLAGS
 } MAV_BATTERY_STATUS_FLAGS;
 #endif
 
+/** @brief CONTROL_STATUS flags. */
+#ifndef HAVE_ENUM_GCS_CONTROL_STATUS_FLAGS
+#define HAVE_ENUM_GCS_CONTROL_STATUS_FLAGS
+typedef enum GCS_CONTROL_STATUS_FLAGS
+{
+   GCS_CONTROL_STATUS_FLAGS_SYSTEM_MANAGER=1, /* If set, this CONTROL_STATUS publishes the controlling GCS for the whole system. If unset, the CONTROL_STATUS indicates the controlling GCS for just the component emitting the message. Note that to request control of the system a GCS should send MAV_CMD_REQUEST_OPERATOR_CONTROL to the component emitting CONTROL_STATUS with this flag set. | */
+   GCS_CONTROL_STATUS_FLAGS_TAKEOVER_ALLOWED=2, /* Takeover allowed (requests for control will be granted). If not set requests for control will be rejected, but the controlling GCS will be notified (and may release control or allow takeover). | */
+   GCS_CONTROL_STATUS_FLAGS_ENUM_END=3, /*  | */
+} GCS_CONTROL_STATUS_FLAGS;
+#endif
+
 /** @brief These flags indicate the sensor reporting capabilities for TARGET_ABSOLUTE. */
 #ifndef HAVE_ENUM_TARGET_ABSOLUTE_SENSOR_CAPABILITY_FLAGS
 #define HAVE_ENUM_TARGET_ABSOLUTE_SENSOR_CAPABILITY_FLAGS
@@ -255,18 +163,6 @@ typedef enum RADIO_RC_CHANNELS_FLAGS
    RADIO_RC_CHANNELS_FLAGS_OUTDATED=2, /* Channel data may be out of date. This is set when the receiver is unable to validate incoming data from the transmitter and has therefore resent the last valid data it received. | */
    RADIO_RC_CHANNELS_FLAGS_ENUM_END=3, /*  | */
 } RADIO_RC_CHANNELS_FLAGS;
-#endif
-
-/** @brief Fuel types for use in FUEL_TYPE. Fuel types specify the units for the maximum, available and consumed fuel, and for the flow rates. */
-#ifndef HAVE_ENUM_MAV_FUEL_TYPE
-#define HAVE_ENUM_MAV_FUEL_TYPE
-typedef enum MAV_FUEL_TYPE
-{
-   MAV_FUEL_TYPE_UNKNOWN=0, /* Not specified. Fuel levels are normalized (i.e. maximum is 1, and other levels are relative to 1. | */
-   MAV_FUEL_TYPE_LIQUID=1, /* A generic liquid fuel. Fuel levels are in millilitres (ml). Fuel rates are in millilitres/second. | */
-   MAV_FUEL_TYPE_GAS=2, /* A gas tank. Fuel levels are in kilo-Pascal (kPa), and flow rates are in milliliters per second (ml/s). | */
-   MAV_FUEL_TYPE_ENUM_END=3, /*  | */
-} MAV_FUEL_TYPE;
 #endif
 
 /** @brief Flags indicating errors in a GPS receiver. */

@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 2170395646792926173
+#define MAVLINK_COMMON_XML_HASH 3623893818239923939
 
 #ifdef __cplusplus
 extern "C" {
@@ -538,7 +538,8 @@ typedef enum ORBIT_YAW_BEHAVIOUR
    ORBIT_YAW_BEHAVIOUR_UNCONTROLLED=2, /* Yaw uncontrolled. | */
    ORBIT_YAW_BEHAVIOUR_HOLD_FRONT_TANGENT_TO_CIRCLE=3, /* Vehicle front follows flight path (tangential to circle). | */
    ORBIT_YAW_BEHAVIOUR_RC_CONTROLLED=4, /* Yaw controlled by RC input. | */
-   ORBIT_YAW_BEHAVIOUR_ENUM_END=5, /*  | */
+   ORBIT_YAW_BEHAVIOUR_UNCHANGED=5, /* Vehicle uses current yaw behaviour (unchanged). The vehicle-default yaw behaviour is used if this value is specified when orbit is first commanded. | */
+   ORBIT_YAW_BEHAVIOUR_ENUM_END=6, /*  | */
 } ORBIT_YAW_BEHAVIOUR;
 #endif
 
@@ -955,6 +956,44 @@ typedef enum MAV_SENSOR_ORIENTATION
 } MAV_SENSOR_ORIENTATION;
 #endif
 
+/** @brief Bitmask of (optional) autopilot capabilities (64 bit). If a bit is set, the autopilot supports this capability. */
+#ifndef HAVE_ENUM_MAV_PROTOCOL_CAPABILITY
+#define HAVE_ENUM_MAV_PROTOCOL_CAPABILITY
+typedef enum MAV_PROTOCOL_CAPABILITY
+{
+   MAV_PROTOCOL_CAPABILITY_MISSION_FLOAT=1, /* Autopilot supports the MISSION_ITEM float message type.
+          Note that MISSION_ITEM is deprecated, and autopilots should use MISSION_INT instead.
+         | */
+   MAV_PROTOCOL_CAPABILITY_PARAM_FLOAT=2, /* Autopilot supports the new param float message type. | */
+   MAV_PROTOCOL_CAPABILITY_MISSION_INT=4, /* Autopilot supports MISSION_ITEM_INT scaled integer message type.
+          Note that this flag must always be set if missions are supported, because missions must always use MISSION_ITEM_INT (rather than MISSION_ITEM, which is deprecated).
+         | */
+   MAV_PROTOCOL_CAPABILITY_COMMAND_INT=8, /* Autopilot supports COMMAND_INT scaled integer message type. | */
+   MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE=16, /* Parameter protocol uses byte-wise encoding of parameter values into param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.
+          Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_C_CAST should be set if the parameter protocol is supported.
+         | */
+   MAV_PROTOCOL_CAPABILITY_FTP=32, /* Autopilot supports the File Transfer Protocol v1: https://mavlink.io/en/services/ftp.html. | */
+   MAV_PROTOCOL_CAPABILITY_SET_ATTITUDE_TARGET=64, /* Autopilot supports commanding attitude offboard. | */
+   MAV_PROTOCOL_CAPABILITY_SET_POSITION_TARGET_LOCAL_NED=128, /* Autopilot supports commanding position and velocity targets in local NED frame. | */
+   MAV_PROTOCOL_CAPABILITY_SET_POSITION_TARGET_GLOBAL_INT=256, /* Autopilot supports commanding position and velocity targets in global scaled integers. | */
+   MAV_PROTOCOL_CAPABILITY_TERRAIN=512, /* Autopilot supports terrain protocol / data handling. | */
+   MAV_PROTOCOL_CAPABILITY_RESERVED3=1024, /* Reserved for future use. | */
+   MAV_PROTOCOL_CAPABILITY_FLIGHT_TERMINATION=2048, /* Autopilot supports the MAV_CMD_DO_FLIGHTTERMINATION command (flight termination). | */
+   MAV_PROTOCOL_CAPABILITY_COMPASS_CALIBRATION=4096, /* Autopilot supports onboard compass calibration. | */
+   MAV_PROTOCOL_CAPABILITY_MAVLINK2=8192, /* Autopilot supports MAVLink version 2. | */
+   MAV_PROTOCOL_CAPABILITY_MISSION_FENCE=16384, /* Autopilot supports mission fence protocol. | */
+   MAV_PROTOCOL_CAPABILITY_MISSION_RALLY=32768, /* Autopilot supports mission rally point protocol. | */
+   MAV_PROTOCOL_CAPABILITY_RESERVED2=65536, /* Reserved for future use. | */
+   MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_C_CAST=131072, /* Parameter protocol uses C-cast of parameter values to set the param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.
+          Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE should be set if the parameter protocol is supported.
+         | */
+   MAV_PROTOCOL_CAPABILITY_COMPONENT_IMPLEMENTS_GIMBAL_MANAGER=262144, /* This component implements/is a gimbal manager. This means the GIMBAL_MANAGER_INFORMATION, and other messages can be requested.
+         | */
+   MAV_PROTOCOL_CAPABILITY_COMPONENT_ACCEPTS_GCS_CONTROL=524288, /* Component supports locking control to a particular GCS independent of its system (via MAV_CMD_REQUEST_OPERATOR_CONTROL). | */
+   MAV_PROTOCOL_CAPABILITY_ENUM_END=524289, /*  | */
+} MAV_PROTOCOL_CAPABILITY;
+#endif
+
 /** @brief Type of mission items being requested/sent in mission protocol. */
 #ifndef HAVE_ENUM_MAV_MISSION_TYPE
 #define HAVE_ENUM_MAV_MISSION_TYPE
@@ -1059,6 +1098,18 @@ typedef enum MAV_BATTERY_FAULT
    BATTERY_FAULT_INCOMPATIBLE_CELLS_CONFIGURATION=256, /* Battery is not compatible due to cell configuration (e.g. 5s1p when vehicle requires 6s). | */
    MAV_BATTERY_FAULT_ENUM_END=257, /*  | */
 } MAV_BATTERY_FAULT;
+#endif
+
+/** @brief Fuel types for use in FUEL_TYPE. Fuel types specify the units for the maximum, available and consumed fuel, and for the flow rates. */
+#ifndef HAVE_ENUM_MAV_FUEL_TYPE
+#define HAVE_ENUM_MAV_FUEL_TYPE
+typedef enum MAV_FUEL_TYPE
+{
+   MAV_FUEL_TYPE_UNKNOWN=0, /* Not specified. Fuel levels are normalized (i.e. maximum is 1, and other levels are relative to 1). | */
+   MAV_FUEL_TYPE_LIQUID=1, /* A generic liquid fuel. Fuel levels are in millilitres (ml). Fuel rates are in millilitres/second. | */
+   MAV_FUEL_TYPE_GAS=2, /* A gas tank. Fuel levels are in kilo-Pascal (kPa), and flow rates are in milliliters per second (ml/s). | */
+   MAV_FUEL_TYPE_ENUM_END=3, /*  | */
+} MAV_FUEL_TYPE;
 #endif
 
 /** @brief Flags to report status/failure cases for a power generator (used in GENERATOR_STATUS). Note that FAULTS are conditions that cause the generator to fail. Warnings are conditions that require attention before the next use (they indicate the system is not operating properly). */
@@ -1378,7 +1429,8 @@ typedef enum CAMERA_CAP_FLAGS
    CAMERA_CAP_FLAGS_HAS_TRACKING_POINT=512, /* Camera supports tracking of a point on the camera view. | */
    CAMERA_CAP_FLAGS_HAS_TRACKING_RECTANGLE=1024, /* Camera supports tracking of a selection rectangle on the camera view. | */
    CAMERA_CAP_FLAGS_HAS_TRACKING_GEO_STATUS=2048, /* Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS). | */
-   CAMERA_CAP_FLAGS_ENUM_END=2049, /*  | */
+   CAMERA_CAP_FLAGS_HAS_THERMAL_RANGE=4096, /* Camera supports absolute thermal range (request CAMERA_THERMAL_RANGE with MAV_CMD_REQUEST_MESSAGE). | */
+   CAMERA_CAP_FLAGS_ENUM_END=4097, /*  | */
 } CAMERA_CAP_FLAGS;
 #endif
 
@@ -1389,7 +1441,8 @@ typedef enum VIDEO_STREAM_STATUS_FLAGS
 {
    VIDEO_STREAM_STATUS_FLAGS_RUNNING=1, /* Stream is active (running) | */
    VIDEO_STREAM_STATUS_FLAGS_THERMAL=2, /* Stream is thermal imaging | */
-   VIDEO_STREAM_STATUS_FLAGS_ENUM_END=3, /*  | */
+   VIDEO_STREAM_STATUS_FLAGS_THERMAL_RANGE_ENABLED=4, /* Stream can report absolute thermal range (see CAMERA_THERMAL_RANGE). | */
+   VIDEO_STREAM_STATUS_FLAGS_ENUM_END=5, /*  | */
 } VIDEO_STREAM_STATUS_FLAGS;
 #endif
 
@@ -1401,9 +1454,21 @@ typedef enum VIDEO_STREAM_TYPE
    VIDEO_STREAM_TYPE_RTSP=0, /* Stream is RTSP | */
    VIDEO_STREAM_TYPE_RTPUDP=1, /* Stream is RTP UDP (URI gives the port number) | */
    VIDEO_STREAM_TYPE_TCP_MPEG=2, /* Stream is MPEG on TCP | */
-   VIDEO_STREAM_TYPE_MPEG_TS_H264=3, /* Stream is h.264 on MPEG TS (URI gives the port number) | */
+   VIDEO_STREAM_TYPE_MPEG_TS=3, /* Stream is MPEG TS (URI gives the port number) | */
    VIDEO_STREAM_TYPE_ENUM_END=4, /*  | */
 } VIDEO_STREAM_TYPE;
+#endif
+
+/** @brief Video stream encodings */
+#ifndef HAVE_ENUM_VIDEO_STREAM_ENCODING
+#define HAVE_ENUM_VIDEO_STREAM_ENCODING
+typedef enum VIDEO_STREAM_ENCODING
+{
+   VIDEO_STREAM_ENCODING_UNKNOWN=0, /* Stream encoding is unknown | */
+   VIDEO_STREAM_ENCODING_H264=1, /* Stream encoding is H.264 | */
+   VIDEO_STREAM_ENCODING_H265=2, /* Stream encoding is H.265 | */
+   VIDEO_STREAM_ENCODING_ENUM_END=3, /*  | */
+} VIDEO_STREAM_ENCODING;
 #endif
 
 /** @brief Camera tracking status flags */
@@ -1526,15 +1591,27 @@ typedef enum MAV_ARM_AUTH_DENIED_REASON
 } MAV_ARM_AUTH_DENIED_REASON;
 #endif
 
-/** @brief RC type */
+/** @brief RC type. Used in MAV_CMD_START_RX_PAIR. */
 #ifndef HAVE_ENUM_RC_TYPE
 #define HAVE_ENUM_RC_TYPE
 typedef enum RC_TYPE
 {
-   RC_TYPE_SPEKTRUM_DSM2=0, /* Spektrum DSM2 | */
-   RC_TYPE_SPEKTRUM_DSMX=1, /* Spektrum DSMX | */
+   RC_TYPE_SPEKTRUM=0, /* Spektrum | */
+   RC_TYPE_CRSF=1, /* CRSF | */
    RC_TYPE_ENUM_END=2, /*  | */
 } RC_TYPE;
+#endif
+
+/** @brief RC sub-type of types defined in RC_TYPE. Used in MAV_CMD_START_RX_PAIR. Ignored if value does not correspond to the set RC_TYPE. */
+#ifndef HAVE_ENUM_RC_SUB_TYPE
+#define HAVE_ENUM_RC_SUB_TYPE
+typedef enum RC_SUB_TYPE
+{
+   RC_SUB_TYPE_SPEKTRUM_DSM2=0, /* Spektrum DSM2 | */
+   RC_SUB_TYPE_SPEKTRUM_DSMX=1, /* Spektrum DSMX | */
+   RC_SUB_TYPE_SPEKTRUM_DSMX8=2, /* Spektrum DSMX8 | */
+   RC_SUB_TYPE_ENUM_END=3, /*  | */
+} RC_SUB_TYPE;
 #endif
 
 /** @brief Bitmap to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000 or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 9 is set the floats afx afy afz should be interpreted as force instead of acceleration. */
@@ -2383,6 +2460,92 @@ typedef enum ILLUMINATOR_ERROR_FLAGS
    ILLUMINATOR_ERROR_FLAGS_THERMISTOR_FAILURE=4, /* Illuminator thermistor failure. | */
    ILLUMINATOR_ERROR_FLAGS_ENUM_END=5, /*  | */
 } ILLUMINATOR_ERROR_FLAGS;
+#endif
+
+/** @brief Standard modes with a well understood meaning across flight stacks and vehicle types.
+        For example, most flight stack have the concept of a "return" or "RTL" mode that takes a vehicle to safety, even though the precise mechanics of this mode may differ.
+        The modes supported by a flight stack can be queried using AVAILABLE_MODES and set using MAV_CMD_DO_SET_STANDARD_MODE.
+        The current mode is streamed in CURRENT_MODE.
+        See https://mavlink.io/en/services/standard_modes.html
+       */
+#ifndef HAVE_ENUM_MAV_STANDARD_MODE
+#define HAVE_ENUM_MAV_STANDARD_MODE
+typedef enum MAV_STANDARD_MODE
+{
+   MAV_STANDARD_MODE_NON_STANDARD=0, /* Non standard mode.
+          This may be used when reporting the mode if the current flight mode is not a standard mode.
+         | */
+   MAV_STANDARD_MODE_POSITION_HOLD=1, /* Position mode (manual).
+          Position-controlled and stabilized manual mode.
+          When sticks are released vehicles return to their level-flight orientation and hold both position and altitude against wind and external forces.
+          This mode can only be set by vehicles that can hold a fixed position.
+          Multicopter (MC) vehicles actively brake and hold both position and altitude against wind and external forces.
+          Hybrid MC/FW ("VTOL") vehicles first transition to multicopter mode (if needed) but otherwise behave in the same way as MC vehicles.
+          Fixed-wing (FW) vehicles must not support this mode.
+          Other vehicle types must not support this mode (this may be revisited through the PR process).
+         | */
+   MAV_STANDARD_MODE_ORBIT=2, /* Orbit (manual).
+          Position-controlled and stabilized manual mode.
+          The vehicle circles around a fixed setpoint in the horizontal plane at a particular radius, altitude, and direction.
+          Flight stacks may further allow manual control over the setpoint position, radius, direction, speed, and/or altitude of the circle, but this is not mandated.
+          Flight stacks may support the [MAV_CMD_DO_ORBIT](https://mavlink.io/en/messages/common.html#MAV_CMD_DO_ORBIT) for changing the orbit parameters.
+          MC and FW vehicles may support this mode.
+          Hybrid MC/FW ("VTOL") vehicles may support this mode in MC/FW or both modes; if the mode is not supported by the current configuration the vehicle should transition to the supported configuration.
+          Other vehicle types must not support this mode (this may be revisited through the PR process).
+         | */
+   MAV_STANDARD_MODE_CRUISE=3, /* Cruise mode (manual).
+          Position-controlled and stabilized manual mode.
+          When sticks are released vehicles return to their level-flight orientation and hold their original track against wind and external forces.
+          Fixed-wing (FW) vehicles level orientation and maintain current track and altitude against wind and external forces.
+          Hybrid MC/FW ("VTOL") vehicles first transition to FW mode (if needed) but otherwise behave in the same way as MC vehicles.
+          Multicopter (MC) vehicles must not support this mode.
+          Other vehicle types must not support this mode (this may be revisited through the PR process).
+         | */
+   MAV_STANDARD_MODE_ALTITUDE_HOLD=4, /* Altitude hold (manual).
+          Altitude-controlled and stabilized manual mode.
+          When sticks are released vehicles return to their level-flight orientation and hold their altitude.
+          MC vehicles continue with existing momentum and may move with wind (or other external forces).
+          FW vehicles continue with current heading, but may be moved off-track by wind.
+          Hybrid MC/FW ("VTOL") vehicles behave according to their current configuration/mode (FW or MC).
+          Other vehicle types must not support this mode (this may be revisited through the PR process).
+         | */
+   MAV_STANDARD_MODE_SAFE_RECOVERY=5, /* Safe recovery mode (auto).
+          Automatic mode that takes vehicle to a predefined safe location via a safe flight path, and may also automatically land the vehicle.
+          This mode is more commonly referred to as RTL and/or or Smart RTL.
+          The precise return location, flight path, and landing behaviour depend on vehicle configuration and type.
+          For example, the vehicle might return to the home/launch location, a rally point, or the start of a mission landing, it might follow a direct path, mission path, or breadcrumb path, and land using a mission landing pattern or some other kind of descent.
+         | */
+   MAV_STANDARD_MODE_MISSION=6, /* Mission mode (automatic).
+          Automatic mode that executes MAVLink missions.
+          Missions are executed from the current waypoint as soon as the mode is enabled.
+         | */
+   MAV_STANDARD_MODE_LAND=7, /* Land mode (auto).
+          Automatic mode that lands the vehicle at the current location.
+          The precise landing behaviour depends on vehicle configuration and type.
+         | */
+   MAV_STANDARD_MODE_TAKEOFF=8, /* Takeoff mode (auto).
+          Automatic takeoff mode.
+          The precise takeoff behaviour depends on vehicle configuration and type.
+         | */
+   MAV_STANDARD_MODE_ENUM_END=9, /*  | */
+} MAV_STANDARD_MODE;
+#endif
+
+/** @brief Mode properties.
+       */
+#ifndef HAVE_ENUM_MAV_MODE_PROPERTY
+#define HAVE_ENUM_MAV_MODE_PROPERTY
+typedef enum MAV_MODE_PROPERTY
+{
+   MAV_MODE_PROPERTY_ADVANCED=1, /* If set, this mode is an advanced mode.
+          For example a rate-controlled manual mode might be advanced, whereas a position-controlled manual mode is not.
+          A GCS can optionally use this flag to configure the UI for its intended users.
+         | */
+   MAV_MODE_PROPERTY_NOT_USER_SELECTABLE=2, /* If set, this mode should not be added to the list of selectable modes.
+          The mode might still be selected by the FC directly (for example as part of a failsafe).
+         | */
+   MAV_MODE_PROPERTY_ENUM_END=3, /*  | */
+} MAV_MODE_PROPERTY;
 #endif
 
 // MAVLINK VERSION
