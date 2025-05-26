@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH 6504803118100576903
+#define MAVLINK_AUTERION_XML_HASH -7629220378055942792
 
 #ifdef __cplusplus
 extern "C" {
@@ -323,6 +323,9 @@ typedef enum MAV_CMD
           The requirement can also be satisfied by automatic setting of the emergency status by flight stack, and that approach is preferred.
           See https://mavlink.io/en/services/opendroneid.html for more information.
 	 |Set/unset emergency 0: unset, 1: set| Reserved (default:NaN)| Reserved (default:NaN)| Empty| Empty| Empty| Empty|  */
+   MAV_CMD_DO_CONTROL_TAKEOVER=13670, /* Commands to take over control from the safety driver. This command cannot give control to safety driver. |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+   MAV_CMD_DO_ENGINE_LEG_TRIM=13671, /* Set engine leg trim position. Can execute trim for individual legs or all legs at once. |Engine leg selection bitmask.| Executes engine leg trimming for all selected engines(0: Down, 1:up)| Empty| Empty| Empty| Empty| Empty|  */
+   MAV_CMD_DO_SET_ENGINE_STATE=13672, /* Commands the desired state for vehicle engines. |Engine selection bitmask.| Commanded engine state for the selected engines.| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_PAYLOAD_PREPARE_DEPLOY=30001, /* Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity. |Operation mode. 0: prepare single payload deploy (overwriting previous requests), but do not execute it. 1: execute payload deploy immediately (rejecting further deploy commands during execution, but allowing abort). 2: add payload deploy to existing deployment list.| Desired approach vector in compass heading. A negative value indicates the system can define the approach vector at will.| Desired ground speed at release time. This can be overridden by the airframe in case it needs to meet minimum airspeed. A negative value indicates the system can define the ground speed at will.| Minimum altitude clearance to the release position. A negative value indicates the system can define the clearance at will.| Latitude.| Longitude.| Altitude (MSL)|  */
    MAV_CMD_PAYLOAD_CONTROL_DEPLOY=30002, /* Control the payload deployment. |Operation mode. 0: Abort deployment, continue normal mission. 1: switch to payload deployment mode. 100: delete first payload deployment request. 101: delete all payload deployment requests.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  */
    MAV_CMD_WAYPOINT_USER_1=31000, /* User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  */
@@ -605,6 +608,102 @@ typedef enum PARAM_TRANSACTION_ACTION
    PARAM_TRANSACTION_ACTION_CANCEL=2, /* Cancel the current parameter transaction. | */
    PARAM_TRANSACTION_ACTION_ENUM_END=3, /*  | */
 } PARAM_TRANSACTION_ACTION;
+#endif
+
+/** @brief Defines the position status of a engine leg trim. */
+#ifndef HAVE_ENUM_ENGINE_LEG_TRIM_STATE
+#define HAVE_ENUM_ENGINE_LEG_TRIM_STATE
+typedef enum ENGINE_LEG_TRIM_STATE
+{
+   ENGINE_LEG_TRIM_NONE=0, /* ENGINE_LEF_TRIM_NONE indicates no engine leg trim system is present. | */
+   ENGINE_LEG_TRIM_STOWED=1, /* ENGINE_LEG_TRIM_STOWED means leg is lifted and the engine should not be started. | */
+   ENGINE_LEG_TRIM_CRUISE=2, /* ENGINE_LEG_TRIM_CRUISE defines the active operational position of the engine leg. | */
+   ENGINE_LEG_TRIM_FAULT=3, /* ENGINE_LEG_TRIM_FAULT indicates a faulty state in the engine leg trimming system. | */
+   ENGINE_LEG_TRIM_STATE_ENUM_END=4, /*  | */
+} ENGINE_LEG_TRIM_STATE;
+#endif
+
+/** @brief Defines health state of a rudder. */
+#ifndef HAVE_ENUM_RUDDER_STATE
+#define HAVE_ENUM_RUDDER_STATE
+typedef enum RUDDER_STATE
+{
+   RUDDER_NONE=0, /* RUDDER_NONE indicates no rudder system is present. | */
+   RUDDER_OK=1, /* RUDDER_OK indicates the rudder is operating correctly. | */
+   RUDDER_FAULT=2, /* RUDDER_FAULT indicates a fault in the rudder system. | */
+   RUDDER_STATE_ENUM_END=3, /*  | */
+} RUDDER_STATE;
+#endif
+
+/** @brief Defines the operation state of an engine. */
+#ifndef HAVE_ENUM_ENGINE_STATE
+#define HAVE_ENUM_ENGINE_STATE
+typedef enum ENGINE_STATE
+{
+   ENGINE_NONE=0, /* ENGINE_NONE indicates engine is not running and ignition is off. | */
+   ENGINE_STOPPED=1, /* ENGINE_STOPPED indicates the engine is not running, but ignition is on. | */
+   ENGINE_STARTING=2, /* ENGINE_STARTING indicates the engine is starting. | */
+   ENGINE_RUNNING=3, /* ENGINE_RUNNING indicates the engine is running. | */
+   ENGINE_FAULT=4, /* ENGINE_FAULT indicates a fault in the engine system. | */
+   ENGINE_STATE_ENUM_END=5, /*  | */
+} ENGINE_STATE;
+#endif
+
+/** @brief Defines the operation state of a transmission. */
+#ifndef HAVE_ENUM_TRANSMISSION_STATE
+#define HAVE_ENUM_TRANSMISSION_STATE
+typedef enum TRANSMISSION_STATE
+{
+   TRANSMISSION_NONE=0, /* TRANSMISSION_NONE indicates no transmission system is present. | */
+   TRANSMISSION_NEUTRAL=1, /* TRANSMISSION_NEUTRAL indicates the transmission is in neutral. | */
+   TRANSMISSION_FORWARD=2, /* TRANSMISSION_FORWARD indicates the transmission is in forward. | */
+   TRANSMISSION_REVERSE=3, /* TRANSMISSION_REVERSE indicates the transmission is in reverse. | */
+   TRANSMISSION_FAULT=4, /* TRANSMISSION_FAULT indicates a fault in the transmission system. | */
+   TRANSMISSION_STATE_ENUM_END=5, /*  | */
+} TRANSMISSION_STATE;
+#endif
+
+/** @brief Defines the type of fluid contained in a tank. */
+#ifndef HAVE_ENUM_FLUID_TANK_TYPE
+#define HAVE_ENUM_FLUID_TANK_TYPE
+typedef enum FLUID_TANK_TYPE
+{
+   TANK_TYPE_FUEL=0, /* TANK_TYPE_FUEL indicates the tank contains fuel. | */
+   TANK_TYPE_WATER=1, /* TANK_TYPE_WATER indicates the tank contains fresh water. | */
+   TANK_TYPE_GRAY_WATER=2, /* TANK_TYPE_GRAY_WATER indicates the tank contains gray water. | */
+   TANK_TYPE_LIVE_WELL=3, /* TANK_TYPE_LIVE_WELL indicates the tank is a live well. | */
+   TANK_TYPE_OIL=4, /* TANK_TYPE_OIL indicates the tank contains engine or hydraulic oil. | */
+   TANK_TYPE_BLACK_WATER=5, /* TANK_TYPE_BLACK_WATER indicates the tank contains black water. | */
+   FLUID_TANK_TYPE_ENUM_END=6, /*  | */
+} FLUID_TANK_TYPE;
+#endif
+
+/** @brief Defines the type of sensor used for measuring speed through water. */
+#ifndef HAVE_ENUM_SPEED_WATER_REFERENCED_TYPE
+#define HAVE_ENUM_SPEED_WATER_REFERENCED_TYPE
+typedef enum SPEED_WATER_REFERENCED_TYPE
+{
+   REFERENCED_TYPE_PADDLE_WHEEL=0, /* REFERENCED_TYPE_PADDLE_WHEEL indicates speed is measured using a paddle wheel sensor. | */
+   REFERENCED_TYPE_PITOT_TUBE=1, /* REFERENCED_TYPE_PITOT_TUBE indicates speed is measured using a pitot tube. | */
+   REFERENCED_TYPE_DOPPLER=2, /* REFERENCED_TYPE_DOPPLER indicates speed is measured using a Doppler-based sensor. | */
+   REFERENCED_TYPE_CORRELATION=3, /* REFERENCED_TYPE_CORRELATION indicates speed is measured using a correlation-based sensor. | */
+   REFERENCED_TYPE_ELECTRO_MAGNETIC=4, /* REFERENCED_TYPE_ELECTRO_MAGNETIC indicates speed is measured using an electromagnetic flow sensor. | */
+   SPEED_WATER_REFERENCED_TYPE_ENUM_END=5, /*  | */
+} SPEED_WATER_REFERENCED_TYPE;
+#endif
+
+/** @brief Specifies the frame of reference used for wind direction and speed measurements. */
+#ifndef HAVE_ENUM_WIND_REFERENCE
+#define HAVE_ENUM_WIND_REFERENCE
+typedef enum WIND_REFERENCE
+{
+   REFERENCE_TRUE=0, /* REFERENCE_TRUE Wind referenced to geographic (true) North. | */
+   REFERENCE_MAGNETIC=1, /* REFERENCE_MAGNETIC Wind referenced to magnetic North. | */
+   REFERENCE_APPARENT=2, /* REFERENCE_APPARENT Apparent wind relative to the vessel. | */
+   REFERENCE_TRUE_BOAT_REFERENCED=3, /* REFERENCE_TRUE_BOAT_REFERENCED True wind direction relative to the boat's heading, corrected for vessel movement but not Earth-referenced.. | */
+   REFERENCE_TRUE_WATER_REFERENCED=4, /* REFERENCE_TRUE_WATER_REFERENCED True wind direction relative to the water surface. | */
+   WIND_REFERENCE_ENUM_END=5, /*  | */
+} WIND_REFERENCE;
 #endif
 
 // MAVLINK VERSION
