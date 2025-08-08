@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH 2090162570844743094
+#define MAVLINK_DEVELOPMENT_XML_HASH 4952596427422330431
 
 #ifdef __cplusplus
 extern "C" {
@@ -232,6 +232,46 @@ typedef enum GPS_RAIM_STATE
    GPS_RAIM_STATE_FAILED=3, /* RAIM integrity check failed. | */
    GPS_RAIM_STATE_ENUM_END=4, /*  | */
 } GPS_RAIM_STATE;
+#endif
+
+/** @brief Actuator groups to test in MAV_CMD_ACTUATOR_GROUP_TEST. */
+#ifndef HAVE_ENUM_ACTUATOR_TEST_GROUP
+#define HAVE_ENUM_ACTUATOR_TEST_GROUP
+typedef enum ACTUATOR_TEST_GROUP
+{
+   ACTUATOR_TEST_GROUP_ROLL_TORQUE=0, /* Actuators that contribute to roll torque. | */
+   ACTUATOR_TEST_GROUP_PITCH_TORQUE=1, /* Actuators that contribute to pitch torque. | */
+   ACTUATOR_TEST_GROUP_YAW_TORQUE=2, /* Actuators that contribute to yaw torque. | */
+   ACTUATOR_TEST_GROUP_COLLECTIVE_TILT=3, /* Actuators that affect collective tilt. | */
+   ACTUATOR_TEST_GROUP_ENUM_END=4, /*  | */
+} ACTUATOR_TEST_GROUP;
+#endif
+
+/** @brief Source for GLOBAL_POSITION measurement or estimate. */
+#ifndef HAVE_ENUM_GLOBAL_POSITION_SRC
+#define HAVE_ENUM_GLOBAL_POSITION_SRC
+typedef enum GLOBAL_POSITION_SRC
+{
+   GLOBAL_POSITION_UNKNOWN=0, /* Source is unknown or not one of the listed types. | */
+   GLOBAL_POSITION_GNSS=1, /* Global Navigation Satellite System (e.g.: GPS, Galileo, Glonass, BeiDou). | */
+   GLOBAL_POSITION_VISION=2, /* Vision system (e.g.: map matching). | */
+   GLOBAL_POSITION_PSEUDOLITES=3, /* Pseudo-satellite system (performs GNSS-like function, but usually with transceiver beacons). | */
+   GLOBAL_POSITION_TRN=4, /* Terrain referenced navigation. | */
+   GLOBAL_POSITION_MAGNETIC=5, /* Magnetic positioning. | */
+   GLOBAL_POSITION_ESTIMATOR=6, /* Estimated position based on various sensors (eg. a Kalman Filter). | */
+   GLOBAL_POSITION_SRC_ENUM_END=7, /*  | */
+} GLOBAL_POSITION_SRC;
+#endif
+
+/** @brief Status flags for GLOBAL_POSITION */
+#ifndef HAVE_ENUM_GLOBAL_POSITION_FLAGS
+#define HAVE_ENUM_GLOBAL_POSITION_FLAGS
+typedef enum GLOBAL_POSITION_FLAGS
+{
+   GLOBAL_POSITION_UNHEALTHY=1, /* Unhealthy sensor/estimator. | */
+   GLOBAL_POSITION_PRIMARY=2, /* True if the data originates from or is consumed by the primary estimator. | */
+   GLOBAL_POSITION_FLAGS_ENUM_END=3, /*  | */
+} GLOBAL_POSITION_FLAGS;
 #endif
 
 // MAVLINK VERSION
