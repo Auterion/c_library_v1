@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH -3681438935138190482
+#define MAVLINK_AUTERION_XML_HASH 5312543142425831621
 
 #ifdef __cplusplus
 extern "C" {
@@ -561,6 +561,43 @@ typedef enum WIND_REFERENCE
    REFERENCE_TRUE_WATER_REFERENCED=4, /* REFERENCE_TRUE_WATER_REFERENCED True wind direction relative to the water surface. | */
    WIND_REFERENCE_ENUM_END=5, /*  | */
 } WIND_REFERENCE;
+#endif
+
+/** @brief Type of navigation angle measurement. */
+#ifndef HAVE_ENUM_NAVIGATION_ANGLE_TYPE
+#define HAVE_ENUM_NAVIGATION_ANGLE_TYPE
+typedef enum NAVIGATION_ANGLE_TYPE
+{
+   NAVIGATION_ANGLE_TYPE_RELATIVE=0, /* Navigation angle measured with respect to vehicle's heading. | */
+   NAVIGATION_ANGLE_TYPE_TRUE=1, /* Navigation angle measured with respect to True North. | */
+   NAVIGATION_ANGLE_TYPE_MAGNETIC=2, /* Navigation angle measured with respect to Magnetic North. | */
+   NAVIGATION_ANGLE_TYPE_ENUM_END=3, /*  | */
+} NAVIGATION_ANGLE_TYPE;
+#endif
+
+/** @brief Target track status. */
+#ifndef HAVE_ENUM_TARGET_TRACK_STATUS
+#define HAVE_ENUM_TARGET_TRACK_STATUS
+typedef enum TARGET_TRACK_STATUS
+{
+   TARGET_TRACK_STATUS_UNKNOWN=0, /* Target track status is unknown. | */
+   TARGET_TRACK_STATUS_LOST=1, /* Target track lost. | */
+   TARGET_TRACK_STATUS_QUERY=2, /* Target track status is being queried. | */
+   TARGET_TRACK_STATUS_TRACKING=3, /* Target is being tracked. | */
+   TARGET_TRACK_STATUS_ENUM_END=4, /*  | */
+} TARGET_TRACK_STATUS;
+#endif
+
+/** @brief Type of target acquisition. */
+#ifndef HAVE_ENUM_TARGET_TRACK_ACQUISITION_TYPE
+#define HAVE_ENUM_TARGET_TRACK_ACQUISITION_TYPE
+typedef enum TARGET_TRACK_ACQUISITION_TYPE
+{
+   TARGET_TRACK_ACQUISITION_TYPE_AUTO=0, /* Automatic target acquisition. | */
+   TARGET_TRACK_ACQUISITION_TYPE_MANUAL=1, /* Manual target acquisition. | */
+   TARGET_TRACK_ACQUISITION_TYPE_REPORTED=2, /* Target acquisition is reported by another system. | */
+   TARGET_TRACK_ACQUISITION_TYPE_ENUM_END=3, /*  | */
+} TARGET_TRACK_ACQUISITION_TYPE;
 #endif
 
 // MAVLINK VERSION
