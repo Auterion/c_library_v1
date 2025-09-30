@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 5009655123949612885
+#define MAVLINK_COMMON_XML_HASH -3197363244317798374
 
 #ifdef __cplusplus
 extern "C" {
@@ -752,6 +752,21 @@ typedef enum MAV_PARAM_TYPE
 } MAV_PARAM_TYPE;
 #endif
 
+/** @brief Parameter protocol error types (see PARAM_ERROR). */
+#ifndef HAVE_ENUM_MAV_PARAM_ERROR
+#define HAVE_ENUM_MAV_PARAM_ERROR
+typedef enum MAV_PARAM_ERROR
+{
+   MAV_PARAM_ERROR_NO_ERROR=0, /* No error occurred (not expected in PARAM_ERROR but may be used in future implementations. | */
+   MAV_PARAM_ERROR_DOES_NOT_EXIST=1, /* Parameter does not exist | */
+   MAV_PARAM_ERROR_VALUE_OUT_OF_RANGE=2, /* Parameter value does not fit within accepted range | */
+   MAV_PARAM_ERROR_PERMISSION_DENIED=3, /* Caller is not permitted to set the value of this parameter | */
+   MAV_PARAM_ERROR_COMPONENT_NOT_FOUND=4, /* Unknown component specified | */
+   MAV_PARAM_ERROR_READ_ONLY=5, /* Parameter is read-only | */
+   MAV_PARAM_ERROR_ENUM_END=6, /*  | */
+} MAV_PARAM_ERROR;
+#endif
+
 /** @brief Specifies the datatype of a MAVLink extended parameter. */
 #ifndef HAVE_ENUM_MAV_PARAM_EXT_TYPE
 #define HAVE_ENUM_MAV_PARAM_EXT_TYPE
@@ -787,7 +802,8 @@ typedef enum MAV_RESULT
    MAV_RESULT_COMMAND_LONG_ONLY=7, /* Command is only accepted when sent as a COMMAND_LONG. | */
    MAV_RESULT_COMMAND_INT_ONLY=8, /* Command is only accepted when sent as a COMMAND_INT. | */
    MAV_RESULT_COMMAND_UNSUPPORTED_MAV_FRAME=9, /* Command is invalid because a frame is required and the specified frame is not supported. | */
-   MAV_RESULT_ENUM_END=10, /*  | */
+   MAV_RESULT_NOT_IN_CONTROL=10, /* Command has been rejected because source system is not in control of the target system/component. | */
+   MAV_RESULT_ENUM_END=11, /*  | */
 } MAV_RESULT;
 #endif
 
@@ -2516,6 +2532,19 @@ typedef enum MAV_MODE_PROPERTY
          | */
    MAV_MODE_PROPERTY_ENUM_END=3, /*  | */
 } MAV_MODE_PROPERTY;
+#endif
+
+/** @brief Flags used to report computer status. */
+#ifndef HAVE_ENUM_COMPUTER_STATUS_FLAGS
+#define HAVE_ENUM_COMPUTER_STATUS_FLAGS
+typedef enum COMPUTER_STATUS_FLAGS
+{
+   COMPUTER_STATUS_FLAGS_UNDER_VOLTAGE=1, /* Indicates if the system is experiencing voltage outside of acceptable range. | */
+   COMPUTER_STATUS_FLAGS_CPU_THROTTLE=2, /* Indicates if CPU throttling is active. | */
+   COMPUTER_STATUS_FLAGS_THERMAL_THROTTLE=4, /* Indicates if thermal throttling is active. | */
+   COMPUTER_STATUS_FLAGS_DISK_FULL=8, /* Indicates if main disk is full. | */
+   COMPUTER_STATUS_FLAGS_ENUM_END=9, /*  | */
+} COMPUTER_STATUS_FLAGS;
 #endif
 
 // MAVLINK VERSION
