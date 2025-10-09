@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH -8238549692126474934
+#define MAVLINK_AUTERION_XML_HASH 3853871957861410471
 
 #ifdef __cplusplus
 extern "C" {
@@ -172,6 +172,7 @@ typedef enum MAV_CMD
 
 	  The command will ACK with MAV_RESULT_FAILED if the sequence number is out of range (including if there is no mission item).
          |Mission sequence value to set. -1 for the current mission item (use to reset mission without changing current mission item).| Reset mission (MAV_BOOL_TRUE). Values not equal to 0 or 1 are invalid. Resets jump counters to initial values and changes mission state "completed" to be "active" or "paused".| Empty| Empty| Empty| Empty| Empty|  */
+   MAV_CMD_SET_PARACHUTE_ARM=225, /* Command to arm/disarm parachute module trigger sources. |Arm flags of parachute trigger sources| Bitmask of arm flags (in param1) that should be modified| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_DO_LAST=240, /* NOP - This command is only used to mark the upper limit of the DO commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_PREFLIGHT_CALIBRATION=241, /* Trigger calibration. This command will be only accepted if in pre-flight mode. Except for Temperature Calibration, only one sensor should be set in a single message and all others should be zero. |1: gyro calibration, 3: gyro temperature calibration| Magnetometer calibration. Values not equal to 0 or 1 are invalid.| Ground pressure calibration. Values not equal to 0 or 1 are invalid.| 1: radio RC calibration, 2: RC trim calibration| 1: accelerometer calibration, 2: board level calibration, 3: accelerometer temperature calibration, 4: simple accelerometer calibration| 1: APM: compass/motor interference calibration (PX4: airspeed calibration, deprecated), 2: airspeed calibration| 1: ESC calibration, 3: barometer temperature calibration|  */
    MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS=242, /* Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow, 5: second magnetometer, 6: third magnetometer| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  */
@@ -598,6 +599,81 @@ typedef enum TARGET_TRACK_ACQUISITION_TYPE
    TARGET_TRACK_ACQUISITION_TYPE_REPORTED=2, /* Target acquisition is reported by another system. | */
    TARGET_TRACK_ACQUISITION_TYPE_ENUM_END=3, /*  | */
 } TARGET_TRACK_ACQUISITION_TYPE;
+#endif
+
+/** @brief Parachute trigger sources. */
+#ifndef HAVE_ENUM_PARACHUTE_TRIGGER_FLAGS
+#define HAVE_ENUM_PARACHUTE_TRIGGER_FLAGS
+typedef enum PARACHUTE_TRIGGER_FLAGS
+{
+   PARACHUTE_TRIGGER_FLAGS_MANUAL=1, /* Manual trigger (ground based control via parachute-specific RF channel) | */
+   PARACHUTE_TRIGGER_FLAGS_ATS=2, /* Automatic trigger system (ATS) | */
+   PARACHUTE_TRIGGER_FLAGS_FC=4, /* Flight controller trigger (e.g. MAVLink from FC, PWM, DroneCan, RC Control) | */
+   PARACHUTE_TRIGGER_FLAGS_OFFBOARD=8, /* Offboard computer trigger (via MAVLink) | */
+   PARACHUTE_TRIGGER_FLAGS_GEOFENCE=16, /* Geofence trigger (by parachute). Parachute uses MAVLink mission protocol to fetch geofence. | */
+   PARACHUTE_TRIGGER_FLAGS_FTS_PRECHECKING=32, /* FTS (flight termination system) pre-checking protocol trigger | */
+   PARACHUTE_TRIGGER_FLAGS_ATS_AUTO_ARM=64, /* Auto-arming of parachute automatic trigger system (ATS). This allows a parachute to enable ATS after detecting that it has reached a desired altitude. | */
+   PARACHUTE_TRIGGER_FLAGS_ATS_AUTO_DISARM=128, /* Auto-disarming of parachute automatic trigger system (ATS). This allows a parachute to disable ATS after detecting that it is below a desired altitude. | */
+   PARACHUTE_TRIGGER_FLAGS_ENUM_END=129, /*  | */
+} PARACHUTE_TRIGGER_FLAGS;
+#endif
+
+/** @brief Parachute deployment trigger source */
+#ifndef HAVE_ENUM_PARACHUTE_DEPLOYMENT_TRIGGER
+#define HAVE_ENUM_PARACHUTE_DEPLOYMENT_TRIGGER
+typedef enum PARACHUTE_DEPLOYMENT_TRIGGER
+{
+   PARACHUTE_DEPLOYMENT_TRIGGER_NONE=0, /* None (parachute has not deployed) | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_MANUAL=1, /* Manual | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_ATS=2, /* Automatic trigger system (ATS) | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_DRONE=3, /* Drone | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_MAVLINK=4, /* MAVLink, e.g. from an offboard computer | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_GEOFENCE=5, /* Geofence | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_FTS_PRECHECKING=6, /* Flight Termination System (FTS) pre-checking protocol | */
+   PARACHUTE_DEPLOYMENT_TRIGGER_ENUM_END=7, /*  | */
+} PARACHUTE_DEPLOYMENT_TRIGGER;
+#endif
+
+/** @brief Parachute module safety-related flags. */
+#ifndef HAVE_ENUM_PARACHUTE_SAFETY_FLAGS
+#define HAVE_ENUM_PARACHUTE_SAFETY_FLAGS
+typedef enum PARACHUTE_SAFETY_FLAGS
+{
+   PARACHUTE_SAFETY_FLAGS_GROUND_CLEARED=1, /* This is used to indicate that the parachute module has cleared a safe distance from the ground for deployment. | */
+   PARACHUTE_SAFETY_FLAGS_ON_GROUND=2, /* This is used to indicate that the parachute's own sensor has confirmed it is stably on the ground. | */
+   PARACHUTE_SAFETY_FLAGS_GEOFENCE_MISSION_SET=4, /* This is used to indicate that the parachute module has downloaded geofence mission successfully and can be triggered by geofence source. | */
+   PARACHUTE_SAFETY_FLAGS_ENUM_END=5, /*  | */
+} PARACHUTE_SAFETY_FLAGS;
+#endif
+
+/** @brief Parachute module error flags (bitmap, 0 means no error) */
+#ifndef HAVE_ENUM_PARACHUTE_ERROR_FLAGS
+#define HAVE_ENUM_PARACHUTE_ERROR_FLAGS
+typedef enum PARACHUTE_ERROR_FLAGS
+{
+   PARACHUTE_ERROR_FLAGS_BAROMETER_ERROR=1, /* There is an error with the parachute barometer | */
+   PARACHUTE_ERROR_FLAGS_IMU_ERROR=2, /* There is an error with the parachute IMU | */
+   PARACHUTE_ERROR_FLAGS_RF_CONNECTION_ERROR=4, /* There is an error with the parachute's RF that is used for manual control | */
+   PARACHUTE_ERROR_FLAGS_LOW_POWER=8, /* Parachute module has low power | */
+   PARACHUTE_ERROR_FLAGS_FC_CONNECTION_ERROR=16, /* There is an error with the connection between parachute and flight controller (FC) | */
+   PARACHUTE_ERROR_FLAGS_EFTS_CONNECTION_ERROR=32, /* There is an error with the connection between parachute and Electrical Flight Termination System (EFTS) | */
+   PARACHUTE_ERROR_FLAGS_POD_CONNECTION_ERROR=64, /* There is an error with the parachute pod | */
+   PARACHUTE_ERROR_FLAGS_EFTS_DIAGNOSE=128, /* Parachute Electrical Flight Termination System (EFTS) diagnosis failed | */
+   PARACHUTE_ERROR_FLAGS_CHARGING_FAILED=256, /* Parachute module charging failed | */
+   PARACHUTE_ERROR_FLAGS_EXTERNAL_POWER_ERROR=512, /* There is an error with the parachute external power source | */
+   PARACHUTE_ERROR_FLAGS_GS_CONNECTION_ERROR=1024, /* There is an error with the connection between parachute and Ground Station (GS) | */
+   PARACHUTE_ERROR_FLAGS_GPS_ERROR=2048, /* There is an error with the parachute's GPS | */
+   PARACHUTE_ERROR_FLAGS_SUBSYSTEM_CONNECTION_ERROR=4096, /* There is an error with the connection between parachute and subsystem (e.g. remote controller, expansion board, etc.) | */
+   PARACHUTE_ERROR_FLAGS_SUBSYSTEM_FW_ERROR=8192, /* There is an error with the parachute subsystem firmware (e.g. wrong firmware version) | */
+   PARACHUTE_ERROR_FLAGS_RESERVED_1=16384, /* Reserved for future use | */
+   PARACHUTE_ERROR_FLAGS_RESERVED_2=32768, /* Reserved for future use | */
+   PARACHUTE_ERROR_FLAGS_LOGGING_ERROR=65536, /* There is an error with the parachute's internal logging system | */
+   PARACHUTE_ERROR_FLAGS_MODULE_RETIRED=131072, /* This parachute module is retired (i.e. too many deployments) | */
+   PARACHUTE_ERROR_FLAGS_GLOW_WIRE_ERROR=262144, /* There is an error with the parachute glow wire | */
+   PARACHUTE_ERROR_FLAGS_OFFBOARD_CONNECTION_ERROR=524288, /* There is an error with the MAVLink connection between parachute and offboard computer | */
+   PARACHUTE_ERROR_FLAGS_IMU_CALIBRATION_ERROR=1048576, /* Parachute's internal IMU calibration failed | */
+   PARACHUTE_ERROR_FLAGS_ENUM_END=1048577, /*  | */
+} PARACHUTE_ERROR_FLAGS;
 #endif
 
 // MAVLINK VERSION
