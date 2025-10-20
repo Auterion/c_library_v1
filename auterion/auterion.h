@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH 3853871957861410471
+#define MAVLINK_AUTERION_XML_HASH 8893040995115059142
 
 #ifdef __cplusplus
 extern "C" {
@@ -337,6 +337,7 @@ typedef enum MAV_CMD
    MAV_CMD_DO_CONTROL_TAKEOVER=13670, /* Commands to take over control from the safety driver. This command cannot give control to safety driver. |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_DO_ENGINE_LEG_TRIM=13671, /* Set engine leg trim position. Can execute trim for individual legs or all legs at once. |Engine leg selection bitmask.| Executes engine leg trimming for all selected engines(0: Down, 1:up)| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_DO_SET_ENGINE_STATE=13672, /* Commands the desired state for vehicle engines. |Engine selection bitmask.| Commanded engine state for the selected engines.| Empty| Empty| Empty| Empty| Empty|  */
+   MAV_CMD_DO_SET_SHIP_APPROACH_SECTORS=13673, /* Set the user defined ship approach sectors. These sector represent approach vectors for the drone's landing sequence, with a 360/8 degree arc. |Approach sector bitmask.| Empty| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_PAYLOAD_PREPARE_DEPLOY=30001, /* Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity. |Operation mode. 0: prepare single payload deploy (overwriting previous requests), but do not execute it. 1: execute payload deploy immediately (rejecting further deploy commands during execution, but allowing abort). 2: add payload deploy to existing deployment list.| Desired approach vector in compass heading. A negative value indicates the system can define the approach vector at will.| Desired ground speed at release time. This can be overridden by the airframe in case it needs to meet minimum airspeed. A negative value indicates the system can define the ground speed at will.| Minimum altitude clearance to the release position. A negative value indicates the system can define the clearance at will.| Latitude.| Longitude.| Altitude (MSL)|  */
    MAV_CMD_PAYLOAD_CONTROL_DEPLOY=30002, /* Control the payload deployment. |Operation mode. 0: Abort deployment, continue normal mission. 1: switch to payload deployment mode. 100: delete first payload deployment request. 101: delete all payload deployment requests.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  */
    MAV_CMD_WAYPOINT_USER_1=31000, /* User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  */
