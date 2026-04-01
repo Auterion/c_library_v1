@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH -1853574220676554163
+#define MAVLINK_AUTERION_XML_HASH -1358575519459722250
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,7 +44,7 @@ typedef enum MAV_CMD
    MAV_CMD_NAV_LOITER_TIME=19, /* Loiter at the specified latitude, longitude and altitude for a certain amount of time. Multicopter vehicles stop at the point (within a vehicle-specific acceptance radius). Forward-only moving vehicles (e.g. fixed-wing) circle the point with the specified radius/direction. If the Heading Required parameter (2) is non-zero forward moving aircraft will only leave the loiter circle once heading towards the next waypoint. |Loiter time (only starts once Lat, Lon and Alt is reached).| Leave loiter circle only when track heading towards the next waypoint (MAV_BOOL_FALSE: Leave on time expiry). Values not equal to 0 or 1 are invalid.| Loiter radius around waypoint for forward-only moving vehicles (not multicopters). If positive loiter clockwise, else counter-clockwise.| Loiter circle exit location and/or path to next waypoint ("xtrack") for forward-only moving vehicles (not multicopters). 0 for the vehicle to converge towards the center xtrack when it leaves the loiter (the line between the centers of the current and next waypoint), 1 to converge to the direct line between the location that the vehicle exits the loiter radius and the next waypoint. Otherwise the angle (in degrees) between the tangent of the loiter circle and the center xtrack at which the vehicle must leave the loiter (and converge to the center xtrack). NaN to use the current system default xtrack behaviour.| Latitude| Longitude| Altitude|  */
    MAV_CMD_NAV_RETURN_TO_LAUNCH=20, /* Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_NAV_LAND=21, /* Land at location. |Minimum target altitude if landing is aborted (0 = undefined/use system default).| Precision land mode.| Empty.| Desired yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude.| Longitude.| Landing altitude (ground level in current frame).|  */
-   MAV_CMD_NAV_TAKEOFF=22, /* Takeoff from ground / hand. Vehicles that support multiple takeoff modes (e.g. VTOL quadplane) should take off using the currently configured mode. |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  */
+   MAV_CMD_NAV_TAKEOFF=22, /* Takeoff from ground / hand. Vehicles that support multiple takeoff modes (e.g. VTOL quadplane) should take off using the currently configured mode. |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Bitmask of options flags.| Yaw angle (if magnetometer present), ignored without magnetometer. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  */
    MAV_CMD_NAV_LAND_LOCAL=23, /* Land at local position (local frame only) |Landing target number (if available)| Maximum accepted offset from desired landing position - computed magnitude from spherical coordinates: d = sqrt(x^2 + y^2 + z^2), which gives the maximum accepted distance between the desired landing position and the position where the vehicle is about to land| Landing descend rate| Desired yaw angle| Y-axis position| X-axis position| Z-axis / ground level position|  */
    MAV_CMD_NAV_TAKEOFF_LOCAL=24, /* Takeoff from local position (local frame only) |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Takeoff ascend rate| Yaw angle (if magnetometer or another yaw estimation source present), ignored without one of these| Y-axis position| X-axis position| Z-axis position|  */
    MAV_CMD_NAV_FOLLOW=25, /* Vehicle following, i.e. this waypoint represents the position of a moving vehicle |Following logic to use (e.g. loitering or sinusoidal following) - depends on specific autopilot implementation| Ground speed of vehicle to be followed| Radius around waypoint. If positive loiter clockwise, else counter-clockwise| Desired yaw angle.| Latitude| Longitude| Altitude|  */
@@ -68,7 +68,7 @@ typedef enum MAV_CMD
    MAV_CMD_NAV_ARC_WAYPOINT=36, /* Circular arc path waypoint.
           This defines the end/exit point and angle (param1) of an arc path from the previous waypoint. A position is required before this command to define the start of the arc (e.g. current position, a MAV_CMD_NAV_WAYPOINT, or a MAV_CMD_NAV_ARC_WAYPOINT).
           The resulting path is a circular arc in the NE frame, with the difference in height being defined by the difference in waypoint altitudes.
-           |The angle in degrees from the starting position to the exit position of the arc in the NE frame. Positive values are CW arcs and negative values are CCW arcs.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Latitude| Longitude| Altitude|  */
+         |The angle in degrees from the starting position to the exit position of the arc in the NE frame. Positive values are CW arcs and negative values are CCW arcs.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Latitude| Longitude| Altitude|  */
    MAV_CMD_NAV_ROI=80, /* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode.| Waypoint index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
    MAV_CMD_NAV_PATHPLANNING=81, /* Control autonomous path planning on the MAV. |0: Disable local obstacle avoidance / local path planning (without resetting map), 1: Enable local path planning, 2: Enable and reset local path planning| 0: Disable full path planning (without resetting map), 1: Enable, 2: Enable and reset map/occupancy grid, 3: Enable and reset planned route, but not occupancy grid| Empty| Yaw angle at goal| Latitude/X of goal| Longitude/Y of goal| Altitude/Z of goal|  */
    MAV_CMD_NAV_SPLINE_WAYPOINT=82, /* Navigate to waypoint using a spline path. |Hold time. (ignored by fixed wing, time to stay at waypoint for rotary wing)| Empty| Empty| Empty| Latitude/X of goal| Longitude/Y of goal| Altitude/Z of goal|  */
@@ -178,7 +178,7 @@ typedef enum MAV_CMD
          |Mission sequence value to set. -1 for the current mission item (use to reset mission without changing current mission item).| Reset mission (MAV_BOOL_TRUE). Values not equal to 0 or 1 are invalid. Resets jump counters to initial values and changes mission state "completed" to be "active" or "paused".| Empty| Empty| Empty| Empty| Empty|  */
    MAV_CMD_SET_PARACHUTE_ARM=225, /* Command to arm/disarm parachute module trigger sources. |Arm flags of parachute trigger sources| Bitmask of arm flags (in param1) that should be modified| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_DO_LAST=240, /* NOP - This command is only used to mark the upper limit of the DO commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
-   MAV_CMD_PREFLIGHT_CALIBRATION=241, /* Trigger calibration. This command will be only accepted if in pre-flight mode. Except for Temperature Calibration, only one sensor should be set in a single message and all others should be zero. |1: gyro calibration, 3: gyro temperature calibration| Magnetometer calibration. Values not equal to 0 or 1 are invalid.| Ground pressure calibration. Values not equal to 0 or 1 are invalid.| 1: radio RC calibration, 2: RC trim calibration| 1: accelerometer calibration, 2: board level calibration, 3: accelerometer temperature calibration, 4: simple accelerometer calibration| 1: APM: compass/motor interference calibration (PX4: airspeed calibration, deprecated), 2: airspeed calibration| 1: ESC calibration, 3: barometer temperature calibration|  */
+   MAV_CMD_PREFLIGHT_CALIBRATION=241, /* Trigger calibration. This command will be only accepted if in pre-flight mode. Except for Temperature Calibration, only one sensor should be set in a single message and all others should be zero. |1: gyro calibration, 3: gyro temperature calibration| Magnetometer calibration action.| Ground pressure calibration. Values not equal to 0 or 1 are invalid.| 1: radio RC calibration, 2: RC trim calibration| Accelerometer calibration action.| 1: APM: compass/motor interference calibration (PX4: airspeed calibration, deprecated), 2: airspeed calibration| 1: ESC calibration, 3: barometer temperature calibration|  */
    MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS=242, /* Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow, 5: second magnetometer, 6: third magnetometer| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  */
    MAV_CMD_PREFLIGHT_UAVCAN=243, /* Trigger UAVCAN configuration (actuator ID assignment and direction mapping). Note that this maps to the legacy UAVCAN v0 function UAVCAN_ENUMERATE, which is intended to be executed just once during initial vehicle configuration (it is not a normal pre-flight command and has been poorly named). |1: Trigger actuator ID assignment and direction mapping. 0: Cancel command.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  */
    MAV_CMD_PREFLIGHT_STORAGE=245, /* Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. |Action to perform on the persistent parameter storage| Action to perform on the persistent mission storage| Onboard logging: 0: Ignore, 1: Start default rate logging, -1: Stop logging, > 1: logging rate (e.g. set to 1000 for 1000 Hz logging)| Reserved| Empty| Empty| Empty|  */
@@ -310,7 +310,7 @@ typedef enum MAV_CMD
    MAV_CMD_DO_VTOL_TRANSITION=3000, /* Request VTOL transition |The target VTOL state. For normal transitions, only MAV_VTOL_STATE_MC and MAV_VTOL_STATE_FW can be used.| Force immediate transition to the specified MAV_VTOL_STATE. 1: Force immediate, 0: normal transition. Can be used, for example, to trigger an emergency "Quadchute". Caution: Can be dangerous/damage vehicle, depending on autopilot implementation of this command.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_ARM_AUTHORIZATION_REQUEST=3001, /* Request authorization to arm the vehicle to a external entity, the arm authorizer is responsible to request all data that is needs from the vehicle before authorize or deny the request.
 		If approved the COMMAND_ACK message progress field should be set with period of time that this authorization is valid in seconds.
-		If the authorization is denied COMMAND_ACK.result_param2 should be set with one of the reasons in ARM_AUTH_DENIED_REASON.
+		If the authorization is denied COMMAND_ACK.result_param2 should be set with one of the reasons in MAV_ARM_AUTH_DENIED_REASON.
          |Vehicle system id, this way ground station can request arm authorization on behalf of any vehicle| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_SET_GUIDED_SUBMODE_STANDARD=4000, /* This command sets the submode to standard guided when vehicle is in guided mode. The vehicle holds position and altitude and the user can input the desired velocities along all three axes.
                    |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
@@ -328,6 +328,7 @@ typedef enum MAV_CMD
          |Radius.| Vehicle must be inside ALL inclusion zones in a single group, vehicle must be inside at least one group| Reserved| Reserved| Latitude| Longitude| Reserved|  */
    MAV_CMD_NAV_FENCE_CIRCLE_EXCLUSION=5004, /* Circular fence area. The vehicle must stay outside this area.
          |Radius.| Reserved| Reserved| Reserved| Latitude| Longitude| Reserved|  */
+   MAV_CMD_NAV_FENCE_HOME_CIRCLE_INCLUSION=5005, /* Circular fence area centered on home. The vehicle must stay inside this area. If home is moved, the fence moves. |Radius.| Vehicle must be inside ALL inclusion zones in a single group, vehicle must be inside at least one group. Ignored when sent as a command.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  */
    MAV_CMD_NAV_RALLY_POINT=5100, /* Rally point. You can have multiple rally points defined.
          |Reserved| Reserved| Reserved| Reserved| Latitude| Longitude| Altitude|  */
    MAV_CMD_UAVCAN_GET_NODE_INFO=5200, /* Commands the vehicle to respond with a sequence of messages UAVCAN_NODE_INFO, one message per every UAVCAN node that is online. Note that some of the response messages can be lost, which the receiver can detect easily by checking whether every received UAVCAN_NODE_STATUS has a matching message UAVCAN_NODE_INFO received earlier; if not, this command should be sent again in order to request re-transmission of the node information messages. |Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)|  */
@@ -397,9 +398,9 @@ typedef enum MAV_CMD
    MAV_CMD_EXTERNAL_WIND_ESTIMATE=43004, /* Set an external estimate of wind direction and speed.
           This might be used to provide an initial wind estimate to the estimator (EKF) in the case where the vehicle is wind dead-reckoning, extending the time when operating without GPS before before position drift builds to an unsafe level. For this use case the command might reasonably be sent every few minutes when operating at altitude, and the value is cleared if the estimator resets itself.
          |Horizontal wind speed.| Estimated 1 sigma accuracy of wind speed. Set to NaN if unknown.| Azimuth (relative to true north) from where the wind is blowing.| Estimated 1 sigma accuracy of wind direction. Set to NaN if unknown.| Empty| Empty| Empty|  */
-   MAV_CMD_SET_ESTIMATOR_SENSOR_FUSION=43006, /* Enable or disable a specific estimator sensor fusion source at runtime.
+   MAV_CMD_ESTIMATOR_SENSOR_ENABLE=43006, /* Enable or disable a specific estimator sensor fusion source at runtime.
           This allows a GCS or companion computer to dynamically control which sensors the estimator fuses without changing parameters.
-         |Sensor fusion source type.| Sensor instance (0-based, for multi-instance).| Enable (1) or Disable (0) the source.| Empty| Empty| Empty| Empty|  */
+         |Sensor fusion source type.| Sensor instance (0-based, for multi-instance).| Enable (1) or Disable (0) the source.| Estimator instance (0-based, for systems with multiple estimators).| Empty| Empty| Empty|  */
    MAV_CMD_ENUM_END=43007, /*  | */
 } MAV_CMD;
 #endif
@@ -699,24 +700,6 @@ typedef enum MAV_PAYLOAD_STATE
    MAV_PAYLOAD_STATE_FAULT=6, /* Device has reported an error. Requires an explicit reset before it can be re-enabled. | */
    MAV_PAYLOAD_STATE_ENUM_END=7, /*  | */
 } MAV_PAYLOAD_STATE;
-#endif
-
-/** @brief Estimator sensor fusion source types. Used in MAV_CMD_SET_ESTIMATOR_SENSOR_FUSION and as array index (source - 1) in ESTIMATOR_SENSOR_FUSION_STATUS. */
-#ifndef HAVE_ENUM_ESTIMATOR_SENSOR_FUSION_SOURCE
-#define HAVE_ENUM_ESTIMATOR_SENSOR_FUSION_SOURCE
-typedef enum ESTIMATOR_SENSOR_FUSION_SOURCE
-{
-   ESTIMATOR_SENSOR_FUSION_SOURCE_GPS=1, /* GNSS | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_OF=2, /* Optical Flow | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_EV=3, /* External Vision | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_AGP=4, /* Auxiliary Global Position | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_BARO=5, /* Barometer | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_RNG=6, /* Range Finder | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_MAG=7, /* Magnetometer | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_ASPD=8, /* Airspeed | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_RANGING_BEACON=9, /* Ranging Beacon | */
-   ESTIMATOR_SENSOR_FUSION_SOURCE_ENUM_END=10, /*  | */
-} ESTIMATOR_SENSOR_FUSION_SOURCE;
 #endif
 
 // MAVLINK VERSION

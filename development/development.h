@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH 2224857979986046871
+#define MAVLINK_DEVELOPMENT_XML_HASH -9105300067623468825
 
 #ifdef __cplusplus
 extern "C" {
@@ -86,7 +86,6 @@ typedef enum MAV_BATTERY_STATUS_FLAGS
          | */
    MAV_BATTERY_STATUS_FLAGS_FAULT_OVER_TEMPERATURE=2048, /* Over-temperature fault. | */
    MAV_BATTERY_STATUS_FLAGS_FAULT_UNDER_TEMPERATURE=4096, /* Under-temperature fault. | */
-   MAV_CMD_NAV_FENCE_HOME_CIRCLE_INCLUSION=5005, /* Circular fence area centered on home. The vehicle must stay inside this area. If home is moved, the fence moves. |Radius.| Vehicle must be inside ALL inclusion zones in a single group, vehicle must be inside at least one group. Ignored when sent as a command.|  */
    MAV_BATTERY_STATUS_FLAGS_FAULT_OVER_CURRENT=8192, /* Over-current fault. | */
    MAV_BATTERY_STATUS_FLAGS_FAULT_SHORT_CIRCUIT=16384, /* 
           Short circuit event detected.
@@ -248,6 +247,45 @@ typedef enum ESC_FIRMWARE
    ESC_FIRMWARE_BLHELI32=3, /* BLHeli32 ESC firmware. | */
    ESC_FIRMWARE_ENUM_END=4, /*  | */
 } ESC_FIRMWARE;
+#endif
+
+/** @brief Altitude reference for RANGING_BEACON alt field. */
+#ifndef HAVE_ENUM_RANGING_BEACON_ALT_TYPE
+#define HAVE_ENUM_RANGING_BEACON_ALT_TYPE
+typedef enum RANGING_BEACON_ALT_TYPE
+{
+   RANGING_BEACON_ALT_TYPE_WGS84=0, /* Altitude above WGS84 ellipsoid. | */
+   RANGING_BEACON_ALT_TYPE_MSL=1, /* Altitude above Mean Sea Level (AMSL). | */
+   RANGING_BEACON_ALT_TYPE_ENUM_END=2, /*  | */
+} RANGING_BEACON_ALT_TYPE;
+#endif
+
+/** @brief Status flags for a RANGING_BEACON. */
+#ifndef HAVE_ENUM_RANGING_BEACON_STATUS_FLAG
+#define HAVE_ENUM_RANGING_BEACON_STATUS_FLAG
+typedef enum RANGING_BEACON_STATUS_FLAG
+{
+   RANGING_BEACON_STATUS_FLAG_STATION_SIGNAL_POOR=1, /* Station signal is poor. This might indicate channel fading, interference, or other signal quality issues. | */
+   RANGING_BEACON_STATUS_FLAG_ENUM_END=2, /*  | */
+} RANGING_BEACON_STATUS_FLAG;
+#endif
+
+/** @brief Estimator sensor fusion source types. Used in MAV_CMD_ESTIMATOR_SENSOR_ENABLE and as array index in ESTIMATOR_SENSOR_FUSION_STATUS. */
+#ifndef HAVE_ENUM_ESTIMATOR_SENSOR_FUSION_SOURCE
+#define HAVE_ENUM_ESTIMATOR_SENSOR_FUSION_SOURCE
+typedef enum ESTIMATOR_SENSOR_FUSION_SOURCE
+{
+   ESTIMATOR_SENSOR_FUSION_SOURCE_GPS=0, /* GNSS | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_OF=1, /* Optical Flow | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_EV=2, /* External Vision | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_AGP=3, /* Auxiliary Global Position | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_BARO=4, /* Barometer | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_RNG=5, /* Range Finder | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_MAG=6, /* Magnetometer | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_ASPD=7, /* Airspeed | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_RANGING_BEACON=8, /* Ranging Beacon | */
+   ESTIMATOR_SENSOR_FUSION_SOURCE_ENUM_END=9, /*  | */
+} ESTIMATOR_SENSOR_FUSION_SOURCE;
 #endif
 
 // MAVLINK VERSION

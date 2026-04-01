@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 2401879905782398798
+#define MAVLINK_COMMON_XML_HASH 6187286705683434632
 
 #ifdef __cplusplus
 extern "C" {
@@ -280,11 +280,13 @@ typedef enum GIMBAL_DEVICE_CAP_FLAGS
    GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_INFINITE_YAW=2048, /* Gimbal device supports yawing/panning infinitely (e.g. using slip disk). | */
    GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_YAW_IN_EARTH_FRAME=4096, /* Gimbal device supports yaw angles and angular velocities relative to North (earth frame). This usually requires support by an autopilot via AUTOPILOT_STATE_FOR_GIMBAL_DEVICE. Support can go on and off during runtime, which is reported by the flag GIMBAL_DEVICE_FLAGS_CAN_ACCEPT_YAW_IN_EARTH_FRAME. | */
    GIMBAL_DEVICE_CAP_FLAGS_HAS_RC_INPUTS=8192, /* Gimbal device supports radio control inputs as an alternative input for controlling the gimbal orientation. | */
-   GIMBAL_DEVICE_CAP_FLAGS_ENUM_END=8193, /*  | */
+   GIMBAL_DEVICE_CAP_FLAGS_CAN_POINT_LOCATION_LOCAL=65536, /* Gimbal device supports to point to a local position. | */
+   GIMBAL_DEVICE_CAP_FLAGS_CAN_POINT_LOCATION_GLOBAL=131072, /* Gimbal device supports to point to a global latitude, longitude, altitude position. | */
+   GIMBAL_DEVICE_CAP_FLAGS_ENUM_END=131073, /*  | */
 } GIMBAL_DEVICE_CAP_FLAGS;
 #endif
 
-/** @brief Gimbal manager high level capability flags (bitmap). The first 16 bits are identical to the GIMBAL_DEVICE_CAP_FLAGS. However, the gimbal manager does not need to copy the flags from the gimbal but can also enhance the capabilities and thus add flags. */
+/** @brief Gimbal manager high level capability flags (bitmap). The flags are identical to the GIMBAL_DEVICE_CAP_FLAGS. However, the gimbal manager does not need to copy the flags from the gimbal but can also enhance the capabilities and thus add flags. */
 #ifndef HAVE_ENUM_GIMBAL_MANAGER_CAP_FLAGS
 #define HAVE_ENUM_GIMBAL_MANAGER_CAP_FLAGS
 typedef enum GIMBAL_MANAGER_CAP_FLAGS
@@ -303,8 +305,8 @@ typedef enum GIMBAL_MANAGER_CAP_FLAGS
    GIMBAL_MANAGER_CAP_FLAGS_SUPPORTS_INFINITE_YAW=2048, /* Based on GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_INFINITE_YAW. | */
    GIMBAL_MANAGER_CAP_FLAGS_SUPPORTS_YAW_IN_EARTH_FRAME=4096, /* Based on GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_YAW_IN_EARTH_FRAME. | */
    GIMBAL_MANAGER_CAP_FLAGS_HAS_RC_INPUTS=8192, /* Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_RC_INPUTS. | */
-   GIMBAL_MANAGER_CAP_FLAGS_CAN_POINT_LOCATION_LOCAL=65536, /* Gimbal manager supports to point to a local position. | */
-   GIMBAL_MANAGER_CAP_FLAGS_CAN_POINT_LOCATION_GLOBAL=131072, /* Gimbal manager supports to point to a global latitude, longitude, altitude position. | */
+   GIMBAL_MANAGER_CAP_FLAGS_CAN_POINT_LOCATION_LOCAL=65536, /* Based on GIMBAL_DEVICE_CAP_FLAGS_CAN_POINT_LOCATION_LOCAL. | */
+   GIMBAL_MANAGER_CAP_FLAGS_CAN_POINT_LOCATION_GLOBAL=131072, /* Based on GIMBAL_DEVICE_CAP_FLAGS_CAN_POINT_LOCATION_GLOBAL. | */
    GIMBAL_MANAGER_CAP_FLAGS_ENUM_END=131073, /*  | */
 } GIMBAL_MANAGER_CAP_FLAGS;
 #endif
@@ -696,6 +698,43 @@ typedef enum REBOOT_SHUTDOWN_CONDITIONS
    REBOOT_SHUTDOWN_CONDITIONS_FORCE=20190226, /* Force reboot/shutdown of the autopilot/component regardless of system state. | */
    REBOOT_SHUTDOWN_CONDITIONS_ENUM_END=20190227, /*  | */
 } REBOOT_SHUTDOWN_CONDITIONS;
+#endif
+
+/** @brief Action for the magnetometer (param2) of MAV_CMD_PREFLIGHT_CALIBRATION. */
+#ifndef HAVE_ENUM_PREFLIGHT_CALIBRATION_MAGNETOMETER
+#define HAVE_ENUM_PREFLIGHT_CALIBRATION_MAGNETOMETER
+typedef enum PREFLIGHT_CALIBRATION_MAGNETOMETER
+{
+   PREFLIGHT_CALIBRATION_MAGNETOMETER_NONE=0, /* No action. | */
+   PREFLIGHT_CALIBRATION_MAGNETOMETER_START=1, /* Start magnetometer calibration. | */
+   PREFLIGHT_CALIBRATION_MAGNETOMETER_FORCE_SAVE=76, /* Force-accept the existing compass calibration as valid without re-running it. Useful after a parameter reload that cleared calibration validity flags. | */
+   PREFLIGHT_CALIBRATION_MAGNETOMETER_ENUM_END=77, /*  | */
+} PREFLIGHT_CALIBRATION_MAGNETOMETER;
+#endif
+
+/** @brief Action for the accelerometer (param5) of MAV_CMD_PREFLIGHT_CALIBRATION. */
+#ifndef HAVE_ENUM_PREFLIGHT_CALIBRATION_ACCELEROMETER
+#define HAVE_ENUM_PREFLIGHT_CALIBRATION_ACCELEROMETER
+typedef enum PREFLIGHT_CALIBRATION_ACCELEROMETER
+{
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_NONE=0, /* No action. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_FULL=1, /* Full 6-position accelerometer calibration. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_TRIM=2, /* Board level (trim) calibration. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_TEMPERATURE=3, /* Accelerometer temperature calibration. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_SIMPLE=4, /* Simple accelerometer calibration. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_FORCE_SAVE=76, /* Force-accept the existing accelerometer calibration as valid without re-running it. Useful after a parameter reload that cleared calibration validity flags. | */
+   PREFLIGHT_CALIBRATION_ACCELEROMETER_ENUM_END=77, /*  | */
+} PREFLIGHT_CALIBRATION_ACCELEROMETER;
+#endif
+
+/** @brief  */
+#ifndef HAVE_ENUM_NAV_TAKEOFF_FLAGS
+#define HAVE_ENUM_NAV_TAKEOFF_FLAGS
+typedef enum NAV_TAKEOFF_FLAGS
+{
+   NAV_TAKEOFF_FLAGS_HORIZONTAL_POSITION_NOT_REQUIRED=1, /* Accept the command even if the autopilot does not have control over its horizontal position (note that it might not have altitude control either). | */
+   NAV_TAKEOFF_FLAGS_ENUM_END=2, /*  | */
+} NAV_TAKEOFF_FLAGS;
 #endif
 
 /** @brief A data stream is not a fixed set of messages, but rather a
@@ -1556,7 +1595,7 @@ typedef enum CAMERA_MODE
 } CAMERA_MODE;
 #endif
 
-/** @brief  */
+/** @brief Reasons for denying an authorization request made with MAV_CMD_ARM_AUTHORIZATION_REQUEST. If the COMMAND_ACK result is MAV_RESULT_DENIED, this is used to set the reason in the result_param2 field. */
 #ifndef HAVE_ENUM_MAV_ARM_AUTH_DENIED_REASON
 #define HAVE_ENUM_MAV_ARM_AUTH_DENIED_REASON
 typedef enum MAV_ARM_AUTH_DENIED_REASON
