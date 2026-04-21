@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_DEVELOPMENT.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_DEVELOPMENT_XML_HASH -7585452601650130610
+#define MAVLINK_DEVELOPMENT_XML_HASH -197140853861575750
 
 #ifdef __cplusplus
 extern "C" {
@@ -110,7 +110,10 @@ typedef enum MAV_BATTERY_STATUS_FLAGS
 #define HAVE_ENUM_GCS_CONTROL_STATUS_FLAGS
 typedef enum GCS_CONTROL_STATUS_FLAGS
 {
-   GCS_CONTROL_STATUS_FLAGS_SYSTEM_MANAGER=1, /* If set, this CONTROL_STATUS publishes the controlling GCS for the whole system. If unset, the CONTROL_STATUS indicates the controlling GCS for just the component emitting the message. Note that to request control of the system a GCS should send MAV_CMD_REQUEST_OPERATOR_CONTROL to the component emitting CONTROL_STATUS with this flag set. | */
+   GCS_CONTROL_STATUS_FLAGS_SYSTEM_MANAGER=1, /* If set, this CONTROL_STATUS publishes the controlling GCS(s) of the whole system. 
+          If unset, the CONTROL_STATUS indicates the controlling GCS(s) for just the component emitting the message.
+          Note that to request control of the system a GCS should send MAV_CMD_REQUEST_OPERATOR_CONTROL to the component emitting CONTROL_STATUS with this flag set.
+         | */
    GCS_CONTROL_STATUS_FLAGS_TAKEOVER_ALLOWED=2, /* Takeover allowed (requests for control will be granted). If not set requests for control will be rejected, but the controlling GCS will be notified (and may release control or allow takeover). | */
    GCS_CONTROL_STATUS_FLAGS_ENUM_END=3, /*  | */
 } GCS_CONTROL_STATUS_FLAGS;
