@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH 7071923313038176575
+#define MAVLINK_COMMON_XML_HASH 1545498977231207534
 
 #ifdef __cplusplus
 extern "C" {
