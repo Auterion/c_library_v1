@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH -5774705218204668852
+#define MAVLINK_AUTERION_XML_HASH 6827131190418065143
 
 #ifdef __cplusplus
 extern "C" {
@@ -712,6 +712,34 @@ typedef enum MAV_PAYLOAD_STATE
    MAV_PAYLOAD_STATE_FAULT=6, /* Device has reported an error. Requires an explicit reset before it can be re-enabled. | */
    MAV_PAYLOAD_STATE_ENUM_END=7, /*  | */
 } MAV_PAYLOAD_STATE;
+#endif
+
+/** @brief  */
+#ifndef HAVE_ENUM_APPS_HEALTH_STATE
+#define HAVE_ENUM_APPS_HEALTH_STATE
+typedef enum APPS_HEALTH_STATE
+{
+   APPS_HEALTH_OK=0, /*  | */
+   APPS_HEALTH_UNKNOWN=1, /*  | */
+   APPS_HEALTH_ERROR=2, /*  | */
+   APPS_HEALTH_STATE_ENUM_END=3, /*  | */
+} APPS_HEALTH_STATE;
+#endif
+
+/** @brief 
+        Bitmask describing application health failures.
+        Used both per-app and aggregated across all apps.
+       */
+#ifndef HAVE_ENUM_APP_HEALTH_FLAGS
+#define HAVE_ENUM_APP_HEALTH_FLAGS
+typedef enum APP_HEALTH_FLAGS
+{
+   APP_NOT_INSTALLED=1, /*  | */
+   APP_NOT_RUNNING=2, /*  | */
+   APP_VERSION_MISMATCH=4, /*  | */
+   APP_CONFIG_MISMATCH=8, /*  | */
+   APP_HEALTH_FLAGS_ENUM_END=9, /*  | */
+} APP_HEALTH_FLAGS;
 #endif
 
 // MAVLINK VERSION
