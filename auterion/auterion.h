@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_AUTERION.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_AUTERION_XML_HASH 6827131190418065143
+#define MAVLINK_AUTERION_XML_HASH -1822061221483973069
 
 #ifdef __cplusplus
 extern "C" {
