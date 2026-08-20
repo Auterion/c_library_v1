@@ -10,7 +10,7 @@
     #error Wrong include order: MAVLINK_COMMON.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#define MAVLINK_COMMON_XML_HASH -2432912644921323812
+#define MAVLINK_COMMON_XML_HASH -5143269391812745838
 
 #ifdef __cplusplus
 extern "C" {
@@ -141,7 +141,9 @@ typedef enum MAV_SYS_STATUS_SENSOR_EXTENDED
    MAV_SYS_STATUS_SENSOR_3D_ACCEL3=8, /* 0x08 3rd 3D accelerometer | */
    MAV_SYS_STATUS_SENSOR_3D_GYRO4=16, /* 0x10 4th 3D gyro | */
    MAV_SYS_STATUS_SENSOR_3D_ACCEL4=32, /* 0x20 4th 3D accelerometer | */
-   MAV_SYS_STATUS_SENSOR_EXTENDED_ENUM_END=33, /*  | */
+   MAV_SYS_STATUS_SENSOR_3D_MAG3=64, /* 0x40 3rd 3D magnetometer | */
+   MAV_SYS_STATUS_SENSOR_3D_MAG4=128, /* 0x80 4th 3D magnetometer | */
+   MAV_SYS_STATUS_SENSOR_EXTENDED_ENUM_END=129, /*  | */
 } MAV_SYS_STATUS_SENSOR_EXTENDED;
 #endif
 
@@ -663,21 +665,6 @@ typedef enum PREFLIGHT_STORAGE_PARAMETER_ACTION
    PARAM_RESET_ALL_DEFAULT=4, /* Reset all parameters to default values. | */
    PREFLIGHT_STORAGE_PARAMETER_ACTION_ENUM_END=5, /*  | */
 } PREFLIGHT_STORAGE_PARAMETER_ACTION;
-#endif
-
-/** @brief 
-        Actions for reading and writing plan information (mission, rally points, geofence) between persistent and volatile storage when using MAV_CMD_PREFLIGHT_STORAGE.
-        (Commonly missions are loaded from persistent storage (flash/EEPROM) into volatile storage (RAM) on startup and written back when they are changed.)
-       */
-#ifndef HAVE_ENUM_PREFLIGHT_STORAGE_MISSION_ACTION
-#define HAVE_ENUM_PREFLIGHT_STORAGE_MISSION_ACTION
-typedef enum PREFLIGHT_STORAGE_MISSION_ACTION
-{
-   MISSION_READ_PERSISTENT=0, /* Read current mission data from persistent storage | */
-   MISSION_WRITE_PERSISTENT=1, /* Write current mission data to persistent storage | */
-   MISSION_RESET_DEFAULT=2, /* Erase all mission data stored on the vehicle (both persistent and volatile storage) | */
-   PREFLIGHT_STORAGE_MISSION_ACTION_ENUM_END=3, /*  | */
-} PREFLIGHT_STORAGE_MISSION_ACTION;
 #endif
 
 /** @brief Reboot/shutdown action for selected component in MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN. */
