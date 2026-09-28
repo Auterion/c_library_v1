@@ -146,17 +146,6 @@ typedef enum TARGET_OBS_FRAME
 } TARGET_OBS_FRAME;
 #endif
 
-/** @brief RADIO_RC_CHANNELS flags (bitmask). */
-#ifndef HAVE_ENUM_RADIO_RC_CHANNELS_FLAGS
-#define HAVE_ENUM_RADIO_RC_CHANNELS_FLAGS
-typedef enum RADIO_RC_CHANNELS_FLAGS
-{
-   RADIO_RC_CHANNELS_FLAGS_FAILSAFE=1, /* Failsafe is active. The content of the RC channels data in the RADIO_RC_CHANNELS message is implementation dependent. | */
-   RADIO_RC_CHANNELS_FLAGS_OUTDATED=2, /* Channel data may be out of date. This is set when the receiver is unable to validate incoming data from the transmitter and has therefore resent the last valid data it received. | */
-   RADIO_RC_CHANNELS_FLAGS_ENUM_END=3, /*  | */
-} RADIO_RC_CHANNELS_FLAGS;
-#endif
-
 /** @brief Flags indicating errors in a GPS receiver. */
 #ifndef HAVE_ENUM_GPS_SYSTEM_ERROR_FLAGS
 #define HAVE_ENUM_GPS_SYSTEM_ERROR_FLAGS

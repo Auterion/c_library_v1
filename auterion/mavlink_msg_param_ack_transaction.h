@@ -135,7 +135,7 @@ static inline uint16_t mavlink_msg_param_ack_transaction_pack_status(uint8_t sys
 #if MAVLINK_CRC_EXTRA
     return mavlink_finalize_message_buffer(msg, system_id, component_id, _status, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_MIN_LEN, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_LEN, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_CRC);
 #else
-    return mavlink_finalize_message_buffer(msg, system_id, component_id, _status, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_MIN_LEN, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_LEN);
+    return mavlink_finalize_message_buffer(msg, system_id, component_id, _status, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_MIN_LEN, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_LEN, 0);
 #endif
 }
 
@@ -310,16 +310,6 @@ static inline void mavlink_msg_param_ack_transaction_send_buf(mavlink_message_t 
 
 
 /**
- * @brief Get field target_system from param_ack_transaction message
- *
- * @return  Id of system that sent PARAM_SET message.
- */
-static inline uint8_t mavlink_msg_param_ack_transaction_get_target_system(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  4);
-}
-
-/**
  * @brief Get field target_component from param_ack_transaction message
  *
  * @return  Id of system that sent PARAM_SET message.
@@ -379,7 +369,7 @@ static inline void mavlink_msg_param_ack_transaction_decode(const mavlink_messag
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     param_ack_transaction->param_value = mavlink_msg_param_ack_transaction_get_param_value(msg);
-    param_ack_transaction->target_system = mavlink_msg_param_ack_transaction_get_target_system(msg);
+    param_ack_transaction->target_system = _MAV_RETURN_uint8_t(msg, 4);
     param_ack_transaction->target_component = mavlink_msg_param_ack_transaction_get_target_component(msg);
     mavlink_msg_param_ack_transaction_get_param_id(msg, param_ack_transaction->param_id);
     param_ack_transaction->param_type = mavlink_msg_param_ack_transaction_get_param_type(msg);
@@ -389,4 +379,5 @@ static inline void mavlink_msg_param_ack_transaction_decode(const mavlink_messag
         memset(param_ack_transaction, 0, MAVLINK_MSG_ID_PARAM_ACK_TRANSACTION_LEN);
     memcpy(param_ack_transaction, _MAV_PAYLOAD(msg), len);
 #endif
+
 }
