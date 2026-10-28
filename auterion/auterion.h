@@ -741,6 +741,31 @@ typedef enum APP_HEALTH_FLAGS
 } APP_HEALTH_FLAGS;
 #endif
 
+/** @brief A video stream's state as judged by its receiver. */
+#ifndef HAVE_ENUM_VIDEO_STREAM_HEALTH
+#define HAVE_ENUM_VIDEO_STREAM_HEALTH
+typedef enum VIDEO_STREAM_HEALTH
+{
+   VIDEO_STREAM_HEALTH_UNKNOWN=0, /* Not judged yet, e.g. right after the stream started. Treat as degraded. | */
+   VIDEO_STREAM_HEALTH_HEALTHY=1, /* The link is clean, and picture damage is repaired quickly. | */
+   VIDEO_STREAM_HEALTH_DEGRADED=2, /* Picture damage persists or packets stopped arriving: faster loss recovery would help. | */
+   VIDEO_STREAM_HEALTH_CONGESTED=3, /* The damage comes with mostly late packets: the link is saturated, lowering the bitrate might help. | */
+   VIDEO_STREAM_HEALTH_ENUM_END=4, /*  | */
+} VIDEO_STREAM_HEALTH;
+#endif
+
+/** @brief Action the video receiver asks of the video sender. */
+#ifndef HAVE_ENUM_VIDEO_RECEIVER_REQUEST
+#define HAVE_ENUM_VIDEO_RECEIVER_REQUEST
+typedef enum VIDEO_RECEIVER_REQUEST
+{
+   VIDEO_RECEIVER_REQUEST_NONE=0, /*  | */
+   VIDEO_RECEIVER_REQUEST_PLI=1, /* A picture was lost; the sender chooses how to repair it (e.g. intra refresh). | */
+   VIDEO_RECEIVER_REQUEST_FIR=2, /* The decoder needs a full intra picture (key frame). | */
+   VIDEO_RECEIVER_REQUEST_ENUM_END=3, /*  | */
+} VIDEO_RECEIVER_REQUEST;
+#endif
+
 // MAVLINK VERSION
 
 #ifndef MAVLINK_VERSION
